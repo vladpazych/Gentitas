@@ -1,14 +1,13 @@
 {
   "name": "gentitas",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "repository": {
     "type": "git",
     "url": "git@github.com:vladpazych/Gentitas.git"
   },
-  "description": "Gentitas is a powerful code generator for Unity3D Entitas projects",
-  "main": "main.js",
+  "description": "Gentitas is a fast and powerful code generator for Entitas projects in Unity3D",
+  "main": "gentitas.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "gulp --gulpfile gentitas.js"
   },
   "author": "Vladislav Pazych",
