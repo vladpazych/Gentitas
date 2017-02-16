@@ -1,0 +1,8 @@
+{{#each propsGO}}
+GameObject _{{toLower this.name}};
+protected GameObject {{toLower this.name}} { get {
+    if (_{{toLower this.name}} == null) {
+        _{{toLower this.name}} = transform.Find("{{this.finder}}").gameObject; }
+    return _{{toLower this.name}}; } }
+    
+{{/each}}

@@ -1,0 +1,15 @@
+{{#if propsEntity.length}}
+/// <para>Single Entities: {{#each propsEntity}}{{toLower this.context.name}}{{toUpper this.ucomponent.name}}{{/each}}</para><br/>
+{{/if}}
+{{#if propsGroup.length}}
+/// <para>Groups Fields: {{#each propsGroup}}{{toLower this.context.name}}{{toUpper this.name}}{{/each}}</para><br/>
+{{/if}}
+{{#if propsGroupSingle.length}}
+/// <para>Groups Single Fields: {{#each propsGroupSingle}}{{toLower this.context.name}}{{toUpper this.name}}{{/each}}</para><br/>
+{{/if}}
+{{#if propsContext.length}}
+/// <para>Context Fields: {{#each propsContext}}{{toLower this.name}}{{/each}}</para><br/>
+{{/if}}
+{{#if comment}}
+/// <para>Goal: {{comment}}</para><br/>
+{{/if}}

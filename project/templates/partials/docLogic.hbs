@@ -1,0 +1,64 @@
+<script>
+    window.onload = function () {
+        document.getElementById("search").focus();
+    };
+
+    var selected = false;
+
+    function toggle_visibility(id) {
+        var e = document.getElementById(id);
+        if (e.style.display == 'block' || e.style.display == '') {
+            e.style.display = 'none';
+        }
+        else {
+            e.style.display = 'block';
+        }
+    }
+
+    function show(id) {
+        if (selected) return;
+        var e = document.getElementById(id);
+        if (e) e.style.display = 'block';
+    }
+
+    function select(id) {
+        if (selected) {
+            deselect()
+            return;
+        }
+        var el = document.getElementById(id + "-element");
+        var e = document.getElementById(id);
+        e.style.display = 'block';
+        el.classList.add("selected");
+        selected = id;
+    }
+
+    function deselect() {
+        if (!selected) return;
+        var es = document.getElementById(selected);
+        var els = document.getElementById(selected + "-element");
+        es.style.display = 'none';
+        els.classList.remove("selected");
+        selected = false;
+    }
+
+    function hide(id) {
+        if (selected) return;
+        var e = document.getElementById(id);
+        if (e) e.style.display = 'none';
+    }
+
+    function searchChange(ev) {
+        deselect();
+        var systems = document.getElementsByClassName("element");
+
+        for (var i in systems) {
+            var system = systems[i];
+            if (system && system.dataset && system.dataset.name && system.dataset.name.toLowerCase().includes(ev.target.value.toLowerCase())) {
+                system.style.display = "block";
+            } else if (system && system.style) {
+                system.style.display = "none";
+            }
+        }
+    }
+</script>

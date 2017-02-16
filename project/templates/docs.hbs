@@ -1,0 +1,86 @@
+{{> docStyle}}
+<html>
+<body>
+    {{> docLogic}}
+    <input class="search" id="search" type="text" value="" onchange="searchChange(event)" oninput="searchChange(event)">
+    <div class="element-params"></div>
+
+    <h1>Not in Chains</h1>
+    <div class="group-list main-list">
+        {{#each systems}} {{#unless chained}}
+        <div class="not-chained">
+            {{nameUpper}}
+        </div>
+        {{/unless}} {{/each}}
+    </div>
+
+    <h1>Chains ({{len chains}})</h1>
+    {{#each chains}}
+    <div class="group-list main-list">
+        <div class="group-name">{{@key}}</div>
+        {{#each systems}}
+        {{> docElement}}
+        {{/each}}
+    </div>
+    {{/each}}
+
+    <h1>Interfaces</h1>
+
+    <div class="group-list">
+        {{#each interfaces}}
+        {{> docElement}}
+        {{/each}}
+    </div>
+
+    <h1>Services</h1>
+
+    <div class="group-list">
+        {{#each services}}
+        {{> docElement}}
+        {{/each}}
+    </div>
+
+    <h1>Views</h1>
+    <div class="group-list">
+        {{#each views}}
+        {{> docElement}}
+        {{/each}}
+    </div>
+
+
+    <h1>Systems ({{len systems}})</h1>
+    <div class="group-list main-list">
+        {{#each systems}}
+        {{> docElement}}
+        {{/each}}
+    </div> 
+
+
+    <h1>Components ({{len components}})</h1>
+
+    <div class="group-list">
+        {{#each components}}
+        <div class="element" id="{{className}}-element" data-name="{{name}}Component" onclick="select('{{className}}')"
+            onmouseover="show('{{className}}')" onmouseout="hide('{{className}}')">
+            <div class="element-name">{{nameUpper}}</div>
+            <div class="element-context">{{#each contexts}}{{name}}{{#unless @last}}, {{/unless}}{{/each}}</div>
+            <div class="element-params" id="{{className}}" style="display: none">
+                <h3 class="element-name">{{className}}</h3>
+                <div class="element-context">{{#each contexts}}{{name}}{{#unless @last}}, {{/unless}}{{/each}}</div>
+                <div class="element-param">
+                    {{#each fields}}
+                    <u>{{this}}</u> {{@key}}<br>
+                    {{/each}}
+                </div>
+                {{#if prefix}}
+                <div class="element-param"><b>Prefix:</b> {{prefix}}</div>
+                {{/if}}
+                <div class="element-param"><b>Single:</b> {{single}}</div>
+            </div>
+    </div>
+    {{/each}}
+    </div>
+
+</body>
+
+</html>

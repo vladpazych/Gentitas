@@ -1,0 +1,150 @@
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:400,700,900&subset=latin-ext');
+    html {
+        font-family: 'Source Code Pro', Courier New, Courier, monospace;
+        line-height: 17px;
+        font-size: 14px;
+        color: #333;
+        user-select: none;
+        cursor: default;
+    }
+       
+    body {
+        padding: 0;
+        margin: 0;
+        padding-top: 50px;
+        padding-bottom: 150px;
+    }
+    
+    h1 {
+        text-align: left;
+        margin: 20px 10px 5px 40px;
+        font-size: 13px;
+        text-transform: uppercase;
+        font-weight: bold;
+        letter-spacing: 1px;
+        color: #666;
+    }
+    
+    h3 {
+        margin-bottom: 30px;
+        display: inline-block;
+        line-height: 50px;
+        user-select: none;
+    }
+    
+    .group-name {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: left;
+        text-align: left;
+        margin: 10px 10px 15px 40px;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-weight: normal;
+        letter-spacing: 1px;
+        color: #888;
+    }
+    
+    .group-list {
+        margin-bottom: 30px;
+        width: 50%;
+        min-width: 600px;
+    }
+    
+    .element {
+        padding: 6px 20px;
+        cursor: pointer;
+        user-select: none;
+    }
+    
+    .not-chained {
+        padding: 6px 20px;
+        cursor: pointer;
+        user-select: text;
+    }
+    
+    .element:hover {
+        background: #eee;
+    }
+    
+    .element.selected {
+        background: #ddd;
+    }
+    
+    .element-param {
+        padding: 1px 2px;
+        margin-bottom: 18px;
+    }
+    
+    .element-param b {
+        font-weight: black;
+    }
+    
+    .element-params .element-name {
+        user-select: none;
+    }
+    
+    .element-params {
+        user-select: none;
+        position: fixed;
+        right: 0;
+        top: 0;
+        height: 100%;
+        background: #eee;
+        border: 1px solid #222;
+        background: #444;
+        color: #fff;
+        width: 50%;
+        box-sizing: border-box;
+        padding: 10px 20px;
+        padding-top: 30px;
+        font-size: 17px;
+        line-height: 22px;
+        z-index: 1;
+        box-sizing: border-box;
+        overflow-y: scroll;
+    }
+    
+    .element-name {
+        display: inline;
+        user-select: text;
+    }
+    
+    .element-context {
+        font-size: 14px;
+        font-style: italic;
+        color: #888;
+        display: inline;
+    }
+    
+    .components {
+        margin: 0 30px;
+    }
+    
+    .component {
+        padding: 5px 8px;
+        background: #f8f8f8;
+        box-sizing: border-box;
+        border: 1px solid #eee;
+        margin-top: -1px;
+    }
+    
+    .search {
+        position: fixed;
+        left: 0;
+        right: 0;
+        width: 50%;
+        top: -1px;
+        height: 50px;
+        padding: 15px 10px;
+        font-size: 16px;
+        font-family: 'Source Code Pro', Courier New, Courier, monospace;
+        border: none;
+        box-shadow: 0;
+        border-bottom: 1px solid #aaa;
+        text-align: left;
+        outline: none;
+        z-index: 100;
+    }
+</style>

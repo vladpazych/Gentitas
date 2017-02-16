@@ -1,0 +1,29 @@
+{
+  "name": "gentitas",
+  "version": "0.2.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:vladpazych/Gentitas.git"
+  },
+  "description": "Gentitas is a powerful code generator for Unity3D Entitas projects",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "gulp --gulpfile gentitas.js"
+  },
+  "author": "Vladislav Pazych",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^7.0.0",
+    "fs-extra": "^2.0.0",
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-clean": "^0.3.2",
+    "gulp-typescript": "^3.1.4",
+    "gulp-watch": "^4.3.11",
+    "handlebars": "^4.0.6",
+    "prettified": "0.0.7",
+    "promise": "^7.1.1",
+    "typescript": "^2.1.4"
+  },
+  "devDependencies": {}
+}
