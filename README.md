@@ -85,7 +85,7 @@ Maintainer
 
 [issues-new]: https://github.com/vladpazych/Gentitas/issues/new "New issue"
 [wiki]: https://github.com/vladpazych/Gentitas/wiki "Entitas Wiki"
-[wiki-install]: https://github.com/vladpazych/Gentitas/wiki/Install "Install and run"
+[wiki-install]: https://github.com/vladpazych/Gentitas/wiki/Install-and-run "Install and run"
 [releases]: https://github.com/vladpazych/Gentitas/releases "Releases"
 [repo]: https://github.com/vladpazych/Gentitas "Repository"
 [pulls]: https://github.com/vladpazych/Gentitas/pulls "New pull request"
