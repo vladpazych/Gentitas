@@ -8,6 +8,7 @@ Gentitas is a fast and easy to extend code generator, that takes data created by
 ### **[» Install and run][wiki-install]**
 ### **[» Ask a question][issues-new]**
 ### **[» Wiki and examples][wiki]**
+### **[» Go to Entitas](https://github.com/sschmid/Entitas-CSharp)**
 
 ---
 
