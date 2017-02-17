@@ -17,7 +17,7 @@ First glimpse
 ```typescript
 // Components
 application = ucomponent()
-loaded = component()
+processed = component()
 action = component({
     value: alias.string
 }).Contexts(contexts.meta)
@@ -35,11 +35,45 @@ someElement = view()
     .PropGO('Body', 'body')
     .PropMB(alias.mb.animator)
     .PropMBExternal(alias.mb.animator, "Body/Common", "commonAnimator")
-    .PropContext(contexts.meta)
+    .PropContext(contexts.core)
     .Method("Rotate", alias.void, { direction: alias.int })
     .MethodEditor("RotateLeft")
     .MethodEditor("RotateRight")
-    .Component()
+    .Ucomponent()
+```
+
+```csharp
+// To implement system:
+public partial class ProcessActionEntitySystem {
+	protected override void Act(MetaEntity entity) 	{
+		entity.isProcessed = true;
+	}
+}
+
+// To implement view:
+public class SomeElementView : BaseSomeElementView {
+    void Start () {
+        // Add reference to this view:
+        coreContext.createEntity().AddSomeElementView(this); // Ucomponent is already generated
+        
+        // SomeElementViewComponent has ISomeElementView as value
+        // ISomeElementView has all methods declared in generator
+    }
+
+    public override void Rotate(int direction) {
+        animator.SetInt("Direction", direction); // Generated property 'animator'
+        coreSomeOtherService.value.DoSomething(); // Generated property 'coreSomeOtherService'
+    }
+
+    // Editor methods will available as buttons in generated custom inspector:
+    public override void RotateLeftTest() {
+        Rotate(3)
+	}
+    
+    public override void RotateRightTest() {
+        Rotate(1)
+	}
+}
 ```
 
 
