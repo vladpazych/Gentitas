@@ -46,7 +46,6 @@ gulp.task('clean', gulp.parallel(['clean templates', 'clean scripts']));
 gulp.task('move templates', function () {
     return gulp.src(config.watchTemplates, { base: '.' })
         .pipe(gulp.dest(compiledJSPath));
-    // recompile templates and generate
 });
 
 gulp.task('compile', function () {
@@ -109,7 +108,6 @@ function generateFiles(callback) {
     return ensureDir(generatedPath)
         .then(cleanGenerateDir(generatedPath, files))
         .then(function () {
-            if (callback) callback();
             for (var key in files) {
                 (function (key) {
                     var outputPath = path.join(generatedPath, key);
@@ -169,9 +167,12 @@ function getTemplates(templates) {
 }
 
 function getDirFromFile(str) {
-    var arr = str.split('/');
+    str = path.normalize(str);
+    var slash = '/';
+    if (process.platform === 'win32') slash = '\\';
+    var arr= str.split(slash);
     arr.pop();
-    return arr.join('/');
+    return arr.join(slash);
 }
 
 function clearCache() {

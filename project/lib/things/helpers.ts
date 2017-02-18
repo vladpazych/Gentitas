@@ -1,4 +1,5 @@
 const fs = require('fs');
+var stackTrace = require('stack-trace');
 import toUpper from '../helpers/toUpper';
 import toLower from '../helpers/toLower';
 
@@ -8,7 +9,7 @@ import toLower from '../helpers/toLower';
 var fileCache = {}
 
 export function ToUpper(value: string) {
-    return toUpper(value);
+    return toUpper(value);  
 }
 
 export function ToLower(value: string) {
@@ -16,14 +17,10 @@ export function ToLower(value: string) {
 }
 
 export function Name() {
-    var stack = new Error().stack;
-    var stackLines = stack.match(/[^\r\n]+/g);
-    var fileLine = getDataFileLine(stackLines);
-    var fileNameAndLine = fileLine.split('(')
-    fileNameAndLine = fileNameAndLine[fileNameAndLine.length - 1]
-    fileNameAndLine = fileNameAndLine.split(':');
-    var lineNumber = parseInt(fileNameAndLine[1]);
-    var fileName = fileNameAndLine[0];
+    var stack = stackTrace.get();
+    var callSite = getCallSite(stack);
+    var lineNumber = callSite.getLineNumber();
+    var fileName = callSite.getFileName();
 
     if (!fileCache[fileName]) {
         fileCache[fileName] = fs.readFileSync(fileName, 'utf8').match(/^.*((\r\n|\n|\r)|$)/gm);
@@ -37,26 +34,18 @@ export function Name() {
 }
 
 export function FileName() {
-    var stack = new Error().stack;
-    var stackLines = stack.match(/[^\r\n]+/g);
-    var fileLine = getDataFileLine(stackLines);
-    var fileNameAndLine = fileLine.split('(')
-    fileNameAndLine = fileNameAndLine[fileNameAndLine.length - 1]
-    fileNameAndLine = fileNameAndLine.split(':');
-    var lineNumber = parseInt(fileNameAndLine[1]);
-    var fileName = fileNameAndLine[0];
-    fileName = fileName.split('/');
-    fileName = fileName.slice(fileName.length - 1);
-    fileName = fileName[0].split('.');
-    fileName = fileName[0]
+    var stack = stackTrace.get();
+    var callSite = getCallSite(stack);
+    var lineNumber = callSite.getLineNumber();
+    var fileName = callSite.getFileName();
 
     return fileName;
 }
 
-function getDataFileLine(stackLines) {
+function getCallSite(stackLines) {
     for (var i = 0; i < stackLines.length; i++) {
-        var line = stackLines[i];
-        if (line.indexOf('declarations') != -1) return line;
+        var line = stackLines[i].getFileName();
+        if (line.indexOf('declarations') != -1) return stackLines[i];
     }
 
     return "";
