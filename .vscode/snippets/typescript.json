@@ -1,0 +1,40 @@
+{
+  // Place your snippets for TypeScript here. Each snippet is defined under a snippet name and has a prefix, body and 
+  // description. The prefix is what is used to trigger the snippet and the body will be expanded and inserted. Possible variables are:
+  // $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. Placeholders with the 
+  // same ids are connected.
+  // Example:
+  "Kernel Index": {
+    "prefix": "kernel",
+    "body": [
+      "import { kernel, match, initializeContract, executeContract, reactiveContracts, namespace } from '@lib'",
+      "import scomps from './comps_state'",
+      "",
+      "const logic = new (class {",
+      "})()",
+      "",
+      "const hooks = namespace('Hooks', new (class {",
+      "})())",
+      "",
+      "export default new (class {",
+      "  main = kernel()",
+      "})()",
+      ""
+    ],
+    "description": "Creates kernel base template"
+  },
+  "Components": {
+    "prefix": "comps",
+    "body": [
+      "import { match, comp, group } from '@lib'",
+      "import \\$ from '@alias'",
+      "import \\$this from './alias'",
+      "import contexts from './contexts'",
+      "",
+      "export default contexts.${name:state}.contextify(new (class {",
+      "})())",
+      ""
+    ],
+    "description": "Creates comps base template"
+  }
+}

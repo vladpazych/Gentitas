@@ -1,5 +1,5 @@
 export default {
-    onEntered: "Added",
-    onLeft: "Removed",
-    onEnteredOrLeft: 'AddedOrRemoved',
+  onEntered: 'Added',
+  onLeft: 'Removed',
+  onEnteredOrLeft: 'AddedOrRemoved',
 }

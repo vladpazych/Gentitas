@@ -1,3 +1,0 @@
-{{#each methods}}
-public virtual {{this.ret}} {{toUpper this.name}}({{#each this.fields}}{{#each this}}{{this}} {{@key}}{{#unless @last}}, {{/unless}}{{/each}}{{/each}}) { {{#ifCond ret "!=" "void"}}return default({{ret}});{{/ifCond}} }
-{{/each}}

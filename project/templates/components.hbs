@@ -8,139 +8,129 @@
 using Entitas;
 using System.Collections.Generic;
 
-{{#each components}}
-public partial class {{className}} : IComponent {
-    {{#each fields}}
-    public {{this}} {{@key}};
+{{#each modules}}
+{{#each contextsUniversal}}
+{{#unless contextValue}}
+namespace {{moduleNameValue}}.Components  {
+{{#each compsValue}}
+    public partial class {{classNameValue}}: IComponent { {{#if fieldValue}}public {{fieldValue}} value;{{/if}} }
+{{/each}}
+}
+
+namespace {{moduleNameValue}} {
+    public interface IEntity : global::Entitas.IEntity {
+        {{#each compsValue}}
+
+        // {{classNameValue}}
+        {{#if fieldValue}}
+        {{fieldValue}} {{nameValue}} { get; set; }
+        bool has{{nameUpperValue}} { get; set; } 
+        void Ping{{nameUpperValue}}();
+
+        {{else}}
+        bool has{{nameUpperValue}} { get; set; } 
+        {{/if}}
+        {{/each}}
+    }
+}
+
+{{/unless}}
+{{/each}}
+{{/each}}
+
+{{#each modules}}
+{{#each contexts}}
+namespace {{moduleNameValue}}.Components.{{nameUpperValue}}  {
+    {{#each compsValue}}
+    {{#unless isUniversalValue}}
+    public partial class {{classNameValue}}: IComponent { {{#if fieldValue}}public {{fieldValue}} value;{{/if}} }
+    {{/unless}}
     {{/each}}
 }
 
 {{/each}}
 
 {{#each contexts}}
-public sealed partial class {{nameUpper}}Matcher {
-    {{#each components}}
-    static IMatcher<{{../nameUpper}}Entity> _matcher{{nameUpper}};
+namespace {{moduleNameValue}} {
+    public sealed partial class {{nameUpperValue}}Matcher {
+        {{#each compsValue}}
+        static IMatcher<{{../nameUpperValue}}Entity> _matcher{{nameUpperValue}};
 
-    public static IMatcher<{{../nameUpper}}Entity> {{nameUpper}} {
-        get {
-            if(_matcher{{nameUpper}} == null) {
-                var matcher = (Matcher<{{../nameUpper}}Entity>)Matcher<{{../nameUpper}}Entity>.AllOf({{../nameUpper}}ComponentsLookup.{{nameUpper}});
-                matcher.componentNames = CoreComponentsLookup.componentNames;
-                _matcher{{nameUpper}} = matcher;
-            }
-
-            return _matcher{{nameUpper}};
-        }
-    }
-    {{/each}}
-}
-
-public partial class {{nameUpper}}Context {
-    {{#each components}}
-    {{#if single}}
-    
-    // {{className}}
-    public {{../nameUpper}}Entity {{name}}Entity { get { return GetGroup({{../nameUpper}}Matcher.{{nameUpper}}).GetSingleEntity(); } }
-
-    {{#if fields}}
-    public {{nameUpper}}Component {{name}} { get { return {{name}}Entity.{{name}}; } }
-    public bool {{#if prefix}}{{prefix}}{{else}}has{{/if}}{{nameUpper}} { get { return {{name}}Entity != null; } }
-
-    public {{../nameUpper}}Entity Set{{nameUpper}}({{#each fields}}{{this}} {{@key}}{{#unless @last}}, {{/unless}}{{/each}}) {
-        if({{#if prefix}}{{prefix}}{{else}}has{{/if}}{{nameUpper}}) {
-            throw new EntitasException("Could not set {{name}}!\n" + this + " already has an entity with {{nameUpper}}Component!",
-                "You should check if the context already has a {{name}}Entity before setting it or use context.Replace{{nameUpper}}().");
-        }
-        var entity = CreateEntity();
-        entity.Add{{nameUpper}}({{#each fields}}{{@key}}{{#unless @last}}, {{/unless}}{{/each}});
-        return entity;
-    }
-
-    public Entity Replace{{nameUpper}}({{#each fields}}{{this}} {{@key}}{{#unless @last}}, {{/unless}}{{/each}}) {
-        var entity = {{name}}Entity;
-        if(entity == null) {
-            entity = Set{{nameUpper}}({{#each fields}}{{@key}}{{#unless @last}}, {{/unless}}{{/each}});
-        } else {
-            entity.Replace{{nameUpper}}({{#each fields}}{{@key}}{{#unless @last}}, {{/unless}}{{/each}});
-        }
-        return entity;
-    }
-
-    public void Remove{{nameUpper}}() {
-        DestroyEntity({{name}}Entity);
-    }
-    {{else}}
-    public bool {{#if prefix}}{{prefix}}{{else}}has{{/if}}{{nameUpper}} {
-        get { return {{name}}Entity != null; }
-        set {
-            var entity = {{name}}Entity;
-            if(value != (entity != null)) {
-                if(value) {
-                    CreateEntity().{{#if prefix}}{{prefix}}{{else}}is{{/if}}{{nameUpper}} = true;
-                } else {
-                    DestroyEntity(entity);
+        public static IMatcher<{{../nameUpperValue}}Entity> {{nameUpperValue}} {
+            get {
+                if(_matcher{{nameUpperValue}} == null) {
+                    var matcher = (Matcher<{{../nameUpperValue}}Entity>)Matcher<{{../nameUpperValue}}Entity>.AllOf({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
+                    matcher.componentNames = {{../nameUpperValue}}ComponentsLookup.componentNames;
+                    _matcher{{nameUpperValue}} = matcher;
                 }
+
+                return _matcher{{nameUpperValue}};
             }
         }
+
+        {{/each}}
     }
-    {{/if}}
-    {{/if}}
-    {{/each}}
 }
+
 {{/each}}
 
 {{#each contexts}}
-public partial class {{nameUpper}}Entity {
-    {{#each components}}
+namespace {{moduleNameValue}} {
+    public partial class {{nameUpperValue}}Entity {{#if entityInterfacesValue.length}}: {{#each entityInterfacesValue}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}{{/if}} {
+        {{#each compsValue}}
 
-    // {{className}}
-    {{#if fields}}
-    public {{nameUpper}}Component {{name}} { get { return ({{nameUpper}}Component)GetComponent({{../nameUpper}}ComponentsLookup.{{nameUpper}}); } }
-    public bool {{#if prefix}}{{prefix}}{{else}}has{{/if}}{{nameUpper}} { get { return HasComponent({{../nameUpper}}ComponentsLookup.{{nameUpper}}); } }
+        // {{classNameValue}}
+        {{#if fieldValue}}
+        public {{fieldValue}} {{nameValue}} { 
+            get {
+                var component = GetComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
+                if (component == null) throw new System.Exception("ComponentDoesNotExist. You trying to get {{nameUpperValue}}, but it is not assigned. Try checking if entity has{{nameValue}}.");
+                return ((Components.{{../nameUpperValue}}.{{classNameValue}})component).value;
+            } 
+            set {
+                var component = CreateComponent<Components.{{../nameUpperValue}}.{{classNameValue}}>({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
+                component.value = value;
+                ReplaceComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}}, component);
+            }
+        }
 
-    public {{../nameUpper}}Entity Add{{nameUpper}}({{#each fields}}{{this}} {{@key}}{{#unless @last}}, {{/unless}}{{/each}}) {
-        var component = CreateComponent<{{nameUpper}}Component>({{../nameUpper}}ComponentsLookup.{{nameUpper}});
-        {{#each fields}}
-        component.{{@key}} = {{@key}};
-        {{/each}}
-        AddComponent({{../nameUpper}}ComponentsLookup.{{nameUpper}}, component);
-        return this;
-    }
+        public bool has{{nameUpperValue}} { 
+            get { return HasComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}}); } 
+            set { 
+                if (value != has{{nameUpperValue}}) {
+                    if (value) {
+                        var component = CreateComponent<Components.{{../nameUpperValue}}.{{classNameValue}}>({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
+                        component.value = default({{fieldValue}});
+                        AddComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}}, component);
+                    } else {
+                        RemoveComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
+                    }
+                }
+            }
+        } 
 
-    public {{../nameUpper}}Entity Replace{{nameUpper}}({{#each fields}}{{this}} {{@key}}{{#unless @last}}, {{/unless}}{{/each}}) {
-        var component = CreateComponent<{{nameUpper}}Component>({{../nameUpper}}ComponentsLookup.{{nameUpper}});
-        {{#each fields}}
-        component.{{@key}} = {{@key}};
-        {{/each}}
-        ReplaceComponent({{../nameUpper}}ComponentsLookup.{{nameUpper}}, component);
-        return this;
-    }
+        public void Ping{{nameUpperValue}}() {
+            var component = GetComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
+            if (component != null) ReplaceComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}}, component);
+        }
 
-    public {{../nameUpper}}Entity Remove{{nameUpper}}() {
-        RemoveComponent({{../nameUpper}}ComponentsLookup.{{nameUpper}});
-        return this;
-    }
-    {{else}}
-    static readonly {{className}} {{toLower className}} = new {{className}}();
-    public bool {{#if prefix}}{{prefix}}{{else}}is{{/if}}{{nameUpper}} {
-        get { return HasComponent({{../nameUpper}}ComponentsLookup.{{nameUpper}}); }
-        set {
-            if(value != {{#if prefix}}{{prefix}}{{else}}is{{/if}}{{nameUpper}}) {
-                if(value) {
-                    AddComponent({{../nameUpper}}ComponentsLookup.{{nameUpper}}, {{toLower className}});
-                } else {
-                    RemoveComponent({{../nameUpper}}ComponentsLookup.{{nameUpper}});
+        {{else}}
+        static readonly {{#if isUniversalValue}}{{moduleNameRefValue}}.Components.{{classNameValue}}{{else}}Components.{{../nameUpperValue}}.{{classNameValue}}{{/if}} {{toLower classNameValue}} = new {{#if isUniversalValue}}{{moduleNameRefValue}}.Components.{{classNameValue}}{{else}}Components.{{../nameUpperValue}}.{{classNameValue}}{{/if}}();
+        public bool has{{nameUpperValue}} {
+            get { return HasComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}}); }
+            set {
+                if (value != has{{nameUpperValue}}) {
+                    if (value) {
+                        AddComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}}, {{toLower classNameValue}});
+                    } else {
+                        RemoveComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
+                    }
                 }
             }
         }
+        {{/if}}
+        {{/each}}
     }
-
-    public {{../nameUpper}}Entity {{#if prefix}}{{toUpper prefix}}{{else}}Is{{/if}}{{nameUpper}} (bool value = true) {
-        {{#if prefix}}{{prefix}}{{else}}is{{/if}}{{nameUpper}} = value;
-        return this;
-    }
-    {{/if}}
-    {{/each}}
 }
+{{/each}}
 {{/each}}

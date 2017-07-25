@@ -1,142 +1,192 @@
-var gulp = require('gulp');
-var gulpTypescript = require('gulp-typescript');
-var gulpWatch = require('gulp-watch');
-var gulpClean = require('gulp-clean');
-var fs = require('fs-extra');
-var path = require('path');
-var errors = require('prettified').errors;
-var Promise = require('promise');
-var Handlebars = require('handlebars');
-var config = require('./gentitas.json');
+var gulp = require('gulp')
+var gulpTypescript = require('gulp-typescript')
+var gulpWatch = require('gulp-watch')
+var gulpClean = require('gulp-clean')
+var gulpReplace = require('gulp-replace')
+var gulpPlumber = require('gulp-plumber')
+var fs = require('fs-extra')
+var path = require('path')
+var errors = require('prettified').errors
+var Promise = require('promise')
+var Handlebars = require('handlebars')
+var config = require('./gentitas.json')
+var os = require('os')
+var isWin = /^win/.test(os.platform())
 
-var tsProject = gulpTypescript.createProject('tsconfig.json', {
+var createTsProject = () => {
+  return gulpTypescript.createProject('tsconfig.json', {
     isolatedModules: true,
-});
+  })
+}
 
-var compiledJSPath = '.compiled';
-var declarationsPath = './project/declarations';
-var compiledTemplates = {};
-var safeKeyword = config.safeKeyword ? safeKeyword : "generated";
-var modifierPath = "./" + path.join(compiledJSPath, config.modifier);
-var mapPath = "./" + path.join(compiledJSPath, config.map);
+var tsProject = createTsProject()
+
+var compiledJSPath = '.compiled'
+var declarationsPath = './project/declarations'
+var compiledTemplates = {}
+var safeKeyword = config.safeKeyword ? safeKeyword : "generated"
+var modifierPath = "./" + path.join(compiledJSPath, config.modifier)
+var mapPath = "./" + path.join(compiledJSPath, config.map)
 
 
 gulp.task('compile templates', function (callback) {
-    compileTemplates(callback);
-});
+  compileTemplates(callback)
+})
 
 gulp.task('generate files', function (callback) {
-    generateFiles(callback).catch(function (err) {
-        errors.print(err);
-    });
-});
+  generateFiles(callback).catch(function (err) {
+    errors.print(err)
+  })
+})
 
 gulp.task('clean scripts', function () {
-    return gulp.src(compiledJSPath + '/**/*.js', { read: false })
-        .pipe(gulpClean());
-});
+  return gulp.src(compiledJSPath + '/**/*.js', { read: false })
+    .pipe(gulpClean())
+})
 
 gulp.task('clean templates', function () {
-    return gulp.src(compiledJSPath + '/**/*.hbs', { read: false })
-        .pipe(gulpClean());
-});
+  return gulp.src(compiledJSPath + '/**/*.hbs', { read: false })
+    .pipe(gulpClean())
+})
 
-gulp.task('clean', gulp.parallel(['clean templates', 'clean scripts']));
+gulp.task('clean', gulp.parallel(['clean templates', 'clean scripts']))
 
 gulp.task('move templates', function () {
-    return gulp.src(config.watchTemplates, { base: '.' })
-        .pipe(gulp.dest(compiledJSPath));
-});
+  return gulp.src(config.watchTemplates, { base: '.' })
+    .pipe(gulp.dest(compiledJSPath))
+})
 
 gulp.task('compile', function () {
-    return gulp.src(config.watchScripts, { base: '.' })
-        .pipe(tsProject())
-        .pipe(gulp.dest(compiledJSPath));
-});
+  var rootPath = path.resolve('.', './.compiled/project/declarations/') + '/'
+  var libPath = path.resolve('.', './.compiled/project/lib/lib')
+  var aliasPath = path.resolve('.', './.compiled/project/declarations/alias')
+
+  if (isWin) {
+    rootPath = rootPath.replace(/\\/g, '\\\\')
+    libPath = libPath.replace(/\\/g, '\\\\')
+    aliasPath = aliasPath.replace(/\\/g, '\\\\')
+  }
+
+  return gulp.src(config.watchScripts, { base: '.' })
+    .pipe((() => {
+      var project
+
+      try {
+        project = tsProject()
+      } catch (e) {
+        console.log('fuck')
+        tsProject = createTsProject()
+        project = tsProject()
+        return project
+      }
+
+      return project
+    })())
+    .pipe(gulpPlumber())
+
+    // If you change shortcuts here, also change it in '/tsconfig.json'
+    .pipe(gulpReplace(/\@\//g, rootPath))
+    .pipe(gulpReplace(/\@lib/g, libPath))
+    .pipe(gulpReplace(/\@alias/g, aliasPath))
+    .pipe(gulp.dest(compiledJSPath))
+})
 
 gulp.task('watch scripts', function () {
-    return gulpWatch(config.watchScripts, gulp.series(['clean scripts', 'compile', 'generate files']));
-});
+  return gulpWatch(config.watchScripts, gulp.series(['clean scripts', 'compile', 'move templates', 'compile templates', 'generate files']))
+})
 
 gulp.task('watch templates', function () {
-    return gulpWatch(config.watchTemplates, gulp.series(['clean templates', 'move templates', 'compile templates', 'generate files']));
-});
+  return gulpWatch(config.watchTemplates, gulp.series(['clean templates', 'move templates', 'compile templates', 'generate files']))
+})
 
-gulp.task('default', gulp.series('clean', [gulp.parallel(['compile', 'move templates']), gulp.series(['compile templates', 'generate files']), gulp.parallel(['watch scripts', 'watch templates'])]));
+gulp.task('default', gulp.parallel([
+  gulp.series([
+    'clean',
+    gulp.parallel([
+      'compile', 'move templates'
+    ]),
+    gulp.series([
+      'compile templates', 'generate files'
+    ])
+  ]),
+  gulp.parallel([
+    'watch scripts', 'watch templates'
+  ])
+]))
 
 function compileTemplates(callback) {
-    try {
-        var partials = getPartials(config.partials);
-        for (var key in partials) {
-            Handlebars.registerPartial(key, partials[key]);
-        }
-
-        var helpers = config.helpers;
-        for (var key in helpers) {
-            var helper = require("./" + path.join(compiledJSPath, helpers[key]));
-            Handlebars.registerHelper(key, helper.default);
-        }
-
-        compiledTemplates = {};
-        var templates = getTemplates(config.files)
-        for (var key in templates) {
-            var compiledTemplate = Handlebars.compile(templates[key], { noEscape: true });
-            compiledTemplates[key] = compiledTemplate;
-        }
-    } catch (err) {
-        errors.print(err);
+  try {
+    var partials = getPartials(config.partials)
+    for (var key in partials) {
+      Handlebars.registerPartial(key, partials[key])
     }
 
-    if (callback) callback();
+    var helpers = config.helpers
+    for (var key in helpers) {
+      var helper = require("./" + path.join(compiledJSPath, helpers[key]))
+      Handlebars.registerHelper(key, helper.default)
+    }
+
+    compiledTemplates = {}
+    var templates = getTemplates(config.files)
+    for (var key in templates) {
+      var compiledTemplate = Handlebars.compile(templates[key], { noEscape: true })
+      compiledTemplates[key] = compiledTemplate
+    }
+  } catch (err) {
+    errors.print(err)
+  }
+
+  if (callback) callback()
 }
 
 function generateFiles(callback) {
-    clearCache();
+  clearCache()
 
-    var requirePath = path.join(compiledJSPath, declarationsPath);
-    var allFiles = getAllFiles(requirePath);
+  var requirePath = path.join(compiledJSPath, declarationsPath)
+  var allFiles = getAllFiles(requirePath)
 
-    requireForSideEffects(allFiles);
+  requireForSideEffects(allFiles)
 
-    var map = require(mapPath).default;
-    var modifier = require(modifierPath).default;
-    var generatedPath = config.generatedPath;
-    var files = config.files;
-    var fileLength = Object.keys(files).length;
-    var writingFile = 0;
+  var map = require(mapPath).default
+  var modifier = require(modifierPath).default
+  var generatedPath = config.generatedPath
+  var files = config.files
+  var fileLength = Object.keys(files).length
+  var writingFile = 0
 
-    return ensureDir(generatedPath)
-        .then(cleanGenerateDir(generatedPath, files))
-        .then(function () {
-            for (var key in files) {
-                (function (key) {
-                    var outputPath = path.join(generatedPath, key);
+  return ensureDir(generatedPath)
+    .then(cleanGenerateDir(generatedPath, files))
+    .then(function () {
+      for (var key in files) {
+        (function (key) {
+          var outputPath = path.join(generatedPath, key)
 
-                    if (!isPathSafe(outputPath)) {
-                        throw "for safety reasons, output folder name should contain '" + safeKeyword + "' part.";
-                    }
+          if (!isPathSafe(outputPath)) {
+            throw "for safety reasons, output folder name should contain '" + safeKeyword + "' part."
+          }
 
-                    var template = compiledTemplates[files[key]];
+          var template = compiledTemplates[files[key]]
 
-                    try {
-                        var outputContent = template(map);
-                    } catch (err) {
-                        err.fileName = key;
-                        err.templateName = files[key];
-                        throw err;
-                    }
+          try {
+            var outputContent = template(map)
+          } catch (err) {
+            err.fileName = key
+            err.templateName = files[key]
+            throw err
+          }
 
-                    ensureDir(outputPath)
-                        .then(writeTemplateToFile(outputPath, outputContent))
-                        .then(function () {
-                            writingFile++;
-                            if (writingFile == fileLength) {
-                                if (callback) callback();
-                            }
-                        });
-                })(key);
-            }
-        });
+          ensureDir(outputPath)
+            .then(writeTemplateToFile(outputPath, outputContent))
+            .then(function () {
+              writingFile++
+              if (writingFile == fileLength) {
+                if (callback) callback()
+              }
+            })
+        })(key)
+      }
+    })
 }
 
 
@@ -145,94 +195,99 @@ function generateFiles(callback) {
 // Helpers
 // 
 function getPartials(partials) {
-    if (partials == undefined) return {};
-    var result = {};
+  if (partials == undefined) return {}
+  var result = {}
 
-    for (var key in partials) {
-        result[key] = fs.readFileSync(path.join(compiledJSPath, partials[key]), 'utf8');
-    }
+  for (var key in partials) {
+    result[key] = fs.readFileSync(path.join(compiledJSPath, partials[key]), 'utf8')
+  }
 
-    return result;
+  return result
 }
 
 function getTemplates(templates) {
-    if (templates == undefined) return {};
-    var result = {};
+  if (templates == undefined) return {}
+  var result = {}
 
-    for (var key in templates) {
-        result[templates[key]] = fs.readFileSync(path.join(compiledJSPath, templates[key]), 'utf8');
-    }
+  for (var key in templates) {
+    result[templates[key]] = fs.readFileSync(path.join(compiledJSPath, templates[key]), 'utf8')
+  }
 
-    return result;
+  return result
 }
 
 function getDirFromFile(str) {
-    str = path.normalize(str);
-    var slash = '/';
-    if (process.platform === 'win32') slash = '\\';
-    var arr= str.split(slash);
-    arr.pop();
-    return arr.join(slash);
+  str = path.normalize(str)
+  var slash = '/'
+  if (process.platform === 'win32') slash = '\\'
+  var arr = str.split(slash)
+  arr.pop()
+  return arr.join(slash)
 }
 
 function clearCache() {
-    var keysToRemove = []
-    for (var key in require.cache) {
-        if (key.indexOf(compiledJSPath) != -1) keysToRemove.push(key);
-    }
+  var keysToRemove = []
+  for (var key in require.cache) {
+    if (key.indexOf(compiledJSPath) != -1) keysToRemove.push(key)
+  }
 
-    for (var i in keysToRemove) {
-        delete require.cache[keysToRemove[i]];
-    }
+  for (var i in keysToRemove) {
+    delete require.cache[keysToRemove[i]]
+  }
 }
 
 function requireForSideEffects(files) {
-    for (var i = 0; i < files.length; i++) {
-        require(files[i]);
+  for (var i = 0; i < files.length; i++) {
+    try {
+      require(files[i])
     }
+    catch (e) {
+      errors.print(e)
+    }
+  }
 }
 
 function getAllFiles(dir, filelist, excepthEnding) {
-    var files = fs.readdirSync(dir);
-    filelist = filelist || [];
+  var files = fs.readdirSync(dir)
+  filelist = filelist || []
 
-    files.forEach(function (file) {
-        if (fs.statSync(path.join(dir, file)).isDirectory()) {
-            filelist = getAllFiles(path.join(dir, file), filelist, excepthEnding);
+  files.forEach(function (file) {
+    if (fs.statSync(path.join(dir, file)).isDirectory()) {
+      filelist = getAllFiles(path.join(dir, file), filelist, excepthEnding)
+    }
+    else {
+      if (excepthEnding) {
+        if (file.indexOf(excepthEnding) == -1) {
+          filelist.push("./" + path.join(dir, file))
         }
-        else {
-            if (excepthEnding) {
-                if (file.indexOf(excepthEnding) == -1) {
-                    filelist.push("./" + path.join(dir, file));
-                }
-            } else {
-                filelist.push("./" + path.join(dir, file));
-            }
-        }
-    });
-    return filelist;
+      } else {
+        filelist.push("./" + path.join(dir, file))
+      }
+    }
+  })
+  return filelist
 }
 
 function getFileListFromFileObject(outputPath, files) {
-    var result = [];
+  var result = []
 
-    for (var key in files) {
-        result.push("./" + path.join(outputPath, key));
-    }
+  for (var key in files) {
+    result.push("./" + path.join(outputPath, key))
+  }
 
-    return result;
+  return result
 }
 
 function isPathSafe(path) {
-    return path.toLowerCase().indexOf(safeKeyword) != -1;
+  return path.toLowerCase().indexOf(safeKeyword) != -1
 }
 
 function showError(str) {
-    console.log("Generation error: " + str);
+  console.log("Generation error: " + str)
 }
 
 function showInfo(str) {
-    console.log("Generation info: " + str);
+  console.log("Generation info: " + str)
 }
 
 
@@ -241,45 +296,46 @@ function showInfo(str) {
 // Promises
 //
 function cleanGenerateDir(outputPath, files) {
-    return new Promise(function (fulfill, reject) {
-        var arr = outputPath.split('/');
-        var allFiles = getAllFiles(outputPath, null, '.meta');
-        var neededFiles = getFileListFromFileObject(outputPath, files);
-        var filesToDelete = [];
+  return new Promise(function (fulfill, reject) {
+    var arr = outputPath.split('/')
+    var allFiles = getAllFiles(outputPath, null, '.meta')
+    var neededFiles = getFileListFromFileObject(outputPath, files)
+    var filesToDelete = []
 
-        for (var i = 0; i < allFiles.length; i++) {
-            var currentFile = allFiles[i];
-            if (neededFiles.indexOf(currentFile) == -1) filesToDelete.push(currentFile);
-        }
+    for (var i = 0; i < allFiles.length; i++) {
+      var currentFile = allFiles[i]
+      if (neededFiles.indexOf(currentFile) == -1) filesToDelete.push(currentFile)
+    }
 
-        if (isPathSafe(outputPath)) {
-            for (var i = 0; i < filesToDelete.length; i++) {
-                fs.unlink(filesToDelete[i]);
-            }
+    if (isPathSafe(outputPath)) {
+      for (var i = 0; i < filesToDelete.length; i++) {
+        fs.unlink(filesToDelete[i])
+      }
 
-            fulfill();
-        } else {
-            reject();
-            showError("can't clean directory without '" + safeKeyword + "' part in it's name.");
-            console.log(outputPath);
-        }
-    });
+      fulfill()
+    } else {
+      reject()
+      showError("can't clean directory without '" + safeKeyword + "' part in it's name.")
+      console.log(outputPath)
+    }
+  })
 }
 
 function writeTemplateToFile(outputPath, outputContent) {
-    return new Promise(function (fulfill, reject) {
-        fs.writeFile(outputPath, outputContent, { flag: 'w' }, function (err) {
-            if (err) reject(err);
-            else fulfill();
-        });
-    });
+  return new Promise(function (fulfill, reject) {
+    fs.writeFile(outputPath, outputContent, { flag: 'w' }, function (err) {
+      if (err) reject(err)
+      else fulfill()
+    })
+  })
 }
 
 function ensureDir(outputPath) {
-    return new Promise(function (fulfill, reject) {
-        fs.ensureDir(getDirFromFile(outputPath), function (err) {
-            if (err) reject(err);
-            else fulfill();
-        });
-    });
+  return new Promise(function (fulfill, reject) {
+    fs.ensureDir(getDirFromFile(outputPath), function (err) {
+      if (err) errors.print(err)
+      if (err) reject(err)
+      else fulfill()
+    })
+  })
 }

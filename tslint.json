@@ -1,0 +1,74 @@
+{
+    "extends": "tslint:recommended",
+    "rules": {
+        "max-line-length": [
+            false
+        ],
+        "curly": false,
+        "member-ordering": [
+            false
+        ],
+        "ordered-imports": [
+            false
+        ],
+        "max-classes-per-file": [
+            false
+        ],
+        "forin": false,
+        "no-string-literal": false,
+        "no-var-requires": false,
+        "prefer-for-of": false,
+        "no-consecutive-blank-lines": [
+            false
+        ],
+        "semicolon": [
+            true,
+            "never"
+        ],
+        "member-access": [
+            false
+        ],
+        "quotemark": [
+            true,
+            "single",
+            "jsx-single"
+        ],
+        "no-trailing-whitespace": true,
+        "whitespace": [
+            true,
+            "check-branch",
+            "check-operator",
+            "check-typecast"
+        ],
+        "indent": [
+            true,
+            "spaces"
+        ],
+        "eofline": true,
+        "arrow-parens": true,
+        "variable-name": [
+            false,
+            "ban-keywords",
+            "check-format",
+            "allow-leading-underscore"
+        ],
+        "no-use-before-declare": true,
+        "use-isnan": true,
+        "align": [
+            true,
+            "parameters",
+            "statements"
+        ],
+        "object-literal-sort-keys": false,
+        "label-position": true,
+        "no-duplicate-variable": true,
+        "no-shadowed-variable": true,
+        "no-empty": false,
+        "no-console": [
+            false
+        ],
+        "one-variable-per-declaration": [
+            false
+        ]
+    }
+}

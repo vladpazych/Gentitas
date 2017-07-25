@@ -1,6 +1,6 @@
 {
   "name": "gentitas",
-  "version": "1.0.1",
+  "version": "0.2.0",
   "repository": {
     "type": "git",
     "url": "git@github.com:vladpazych/Gentitas.git"
@@ -10,6 +10,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "gulp --gulpfile gentitas.js"
+  },
+  "directories": {
+    "bin": "project"
   },
   "author": "Vladislav Pazych",
   "license": "MIT",
@@ -26,5 +29,8 @@
     "stack-trace": "0.0.9",
     "typescript": "^2.1.4"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "gulp-plumber": "^1.1.0",
+    "gulp-replace": "^0.5.4"
+  }
 }

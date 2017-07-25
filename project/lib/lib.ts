@@ -1,39 +1,23 @@
-import EventType from './things/eventType';
-import Matcher from './things/matcher';
-import { component, ucomponent } from './things/component';
-import { context } from './things/context';
-import { ecsInterface } from './things/ecsInterface';
-import { ecsClass } from './things/ecsClass';
-import { initializeSystem, executeSystem, reactiveSystem, chainSystem } from './things/system';
-import { view } from './things/view';
+import { match } from './things/match'
+import { context, universify } from './things/context'
+import { comp } from './things/comp'
+import { group } from './things/group'
+import { executeContract, initializeContract, reactiveContract, multiReactiveContract } from './things/contracts'
+import { kernel } from './things/kernel'
+import namespace from './things/namespace'
+import alias from './things/alias'
 
 export {
-    EventType,
-    Matcher,
-    component,
-    ucomponent,
-    context,
-    ecsInterface,
-    ecsClass,
-    initializeSystem,
-    executeSystem,
-    reactiveSystem,
-    chainSystem,
-    view
-}
-
-
-export default {
-    EventType,
-    Matcher,
-    component,
-    ucomponent,
-    context,
-    ecsInterface,
-    ecsClass,
-    initializeSystem,
-    executeSystem,
-    reactiveSystem,
-    chainSystem,
-    view
+  match,
+  context,
+  universify,
+  kernel,
+  comp,
+  group,
+  initializeContract,
+  executeContract,
+  reactiveContract,
+  multiReactiveContract,
+  namespace,
+  alias
 }

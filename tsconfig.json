@@ -1,11 +1,32 @@
 {
+    "indentSize": 2,
+    "tabSize": 2,
     "compilerOptions": {
-        "target": "es5",
+        // If you change shortcuts here, also change it in gentitas.js -> gulp.task('compile')
+        "paths": {
+            "@/*": [
+                "./declarations/*"
+            ],
+            "@alias": [
+                "./declarations/alias"
+            ],
+            "@lib": [
+                "./lib/lib"
+            ]
+        },
+        "baseUrl": "./project",
+        "rootDir": "./project",
+        "rootDirs": [
+            "./project"
+        ],
+        "target": "es6",
         "module": "commonjs",
-        "sourceMap": true,
+        "moduleResolution": "node",
+        "sourceMap": false,
         "noImplicitUseStrict": true,
         "noImplicitAny": false,
         "allowJs": true,
+        "forceConsistentCasingInFileNames": true,
         "allowSyntheticDefaultImports": true
     }
 }

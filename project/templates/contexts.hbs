@@ -8,82 +8,175 @@
 using Entitas;
 using System.Collections.Generic;
 
-public partial class Contexts : IContexts {
-    public static Contexts sharedInstance {
-        get {
-            if(_sharedInstance == null) {
-                _sharedInstance = new Contexts();
+{{#each modules}}
+namespace {{@key}} {
+    public partial class Contexts : IContexts {
+        public static Contexts sharedInstance {
+            get {
+                if(_sharedInstance == null) {
+                    _sharedInstance = new Contexts();
+                }
+
+                return _sharedInstance;
             }
-
-            return _sharedInstance;
+            set { _sharedInstance = value; }
         }
-        set { _sharedInstance = value; }
-    }
 
-    static Contexts _sharedInstance;
+        static Contexts _sharedInstance;
 
-    public static void CreateContextObserver(IContext context) {
-#if(!ENTITAS_DISABLE_VISUAL_DEBUGGING && UNITY_EDITOR)
-        if(UnityEngine.Application.isPlaying) {
-            var observer = new Entitas.Unity.VisualDebugging.ContextObserver(context);
-            UnityEngine.Object.DontDestroyOnLoad(observer.gameObject);
+        public static void CreateContextObserver(IContext context) {
+    #if(!ENTITAS_DISABLE_VISUAL_DEBUGGING && UNITY_EDITOR)
+            if(UnityEngine.Application.isPlaying) {
+                var observer = new Entitas.VisualDebugging.Unity.ContextObserver(context);
+                UnityEngine.Object.DontDestroyOnLoad(observer.gameObject);
+            }
+    #endif
         }
-#endif
+
+        // Contexts
+        {{#each contexts}}
+        public {{nameUpperValue}}Context {{nameValue}} { get; set; }
+        {{/each}}
+
+        // IndiciesValue
+        {{#each contexts}}
+        {{#each indiciesValue}}
+        public const string {{contextValue.nameUpperValue}}{{nameUpperValue}} = "{{contextValue.nameUpperValue}}{{nameUpperValue}}";
+        {{/each}}
+        {{/each}}
+
+        public IContext[] allContexts { get { return new IContext [] { {{#each contexts}}{{nameValue}}{{#unless @last}}, {{/unless}}{{/each}} }; } }
+
+        public Contexts() {
+            {{#each contexts}}
+            {{nameValue}} = new {{nameUpperValue}}Context();
+            {{/each}}
+
+            {{#each contexts}}
+            CreateContextObserver({{nameValue}});
+            {{/each}}
+
+            InitializeEntityIndices();
+        }
+
+        public void InitializeEntityIndices() {
+            {{#each contexts}}
+            {{#each indiciesValue}}
+            {{../nameValue}}.AddEntityIndex(new Entitas.EntityIndex<{{../nameUpperValue}}Entity, {{fieldValue}}>(
+                "{{contextValue.nameUpperValue}}{{nameUpperValue}}",
+                {{../nameValue}}.GetGroup({{../nameUpperValue}}Matcher.{{nameUpperValue}}),
+                (e, c) => ((Components.{{../nameUpperValue}}.{{classNameValue}})c).value));
+            {{/each}}
+            {{/each}}
+        }
+
+        public void Reset() {
+            var contexts = allContexts;
+            for (int i = 0; i < contexts.Length; i++) {
+                contexts[i].Reset();
+            }
+        }
     }
 
     {{#each contexts}}
-    public {{nameUpper}}Context {{name}} { get; set; }
-    {{/each}}
+    public sealed partial class {{nameUpperValue}}Entity : Entity {
+        public {{nameUpperValue}}Entity AddComponentByName(string name) {
+            var componentIndex = {{nameUpperValue}}ComponentsLookup.GetComponentIndex(name);
+            if (componentIndex == -1) throw new System.Exception("There is no component named " + name);
+            return this.AddComponentByIndex(componentIndex);
+        }
 
-    public IContext[] allContexts { get { return new IContext [] { {{#each contexts}}{{name}}{{#unless @last}}, {{/unless}}{{/each}} }; } }
+        public {{nameUpperValue}}Entity AddComponentByIndex(int index) {
+            this.AddComponent(index, this.CreateComponent(index, {{nameUpperValue}}ComponentsLookup.componentTypes[index]));
+            return this;
+        }
+    }
 
-    public void SetAllContexts() {
-        {{#each contexts}}
-        {{name}} = new {{nameUpper}}Context();
-        {{/each}}
+    public partial class {{nameUpperValue}}Context : Context<{{nameUpperValue}}Entity> {
+        public {{nameUpperValue}}Context()
+            : base(
+                {{nameUpperValue}}ComponentsLookup.TotalComponents,
+                0,
+                new ContextInfo(
+                    "{{moduleNameValue}}{{nameUpperValue}}",
+                    {{nameUpperValue}}ComponentsLookup.componentNames,
+                    {{nameUpperValue}}ComponentsLookup.componentTypes
+                ),
+                (entity) =>
 
-        {{#each contexts}}
-        CreateContextObserver({{name}});
+    #if (ENTITAS_FAST_AND_UNSAFE)
+                    new Entitas.UnsafeAERC()
+    #else
+                    new Entitas.SafeAERC(entity)
+    #endif
+
+            ) {
+        }
+
+        {{#each indiciesValue}}
+        {{#if indexUniqueValue}}
+        public bool HasEntityWith{{nameUpperValue}}({{fieldValue}} value) {
+            var collection = ((Entitas.EntityIndex<{{../nameUpperValue}}Entity, {{fieldValue}}>)GetEntityIndex(Contexts.{{contextValue.nameUpperValue}}{{nameUpperValue}})).GetEntities(value);
+            return collection.Count == 1;
+        }
+
+        public {{../nameUpperValue}}Entity GetEntityWith{{nameUpperValue}}({{fieldValue}} value) {
+            var collection = ((Entitas.EntityIndex<{{../nameUpperValue}}Entity, {{fieldValue}}>)GetEntityIndex(Contexts.{{contextValue.nameUpperValue}}{{nameUpperValue}})).GetEntities(value);
+            if (collection.Count == 0) return null;
+            if (collection.Count == 1) return collection.SingleEntity();
+            throw new System.Exception("{{../nameUpperValue}}Context does not have Entity with {{nameUpperValue}} = " + value + ". Try checking with HasEntityWith{{nameUpperValue}}({{fieldValue}} value) before calling Get method.");
+        }
+        {{else}}
+        public System.Collections.Generic.HashSet<{{../nameUpperValue}}Entity> GetEntitiesWith{{nameUpperValue}}({{fieldValue}} value) {
+            return ((Entitas.EntityIndex<{{../nameUpperValue}}Entity, {{fieldValue}}>)GetEntityIndex(Contexts.{{contextValue.nameUpperValue}}{{nameUpperValue}})).GetEntities(value);
+        }
+        {{/if}}
+
         {{/each}}
     }
-}
 
-{{#each contexts}}
-public sealed partial class {{nameUpper}}Entity : Entity {
-}
+    public static class {{nameUpperValue}}ComponentsLookup {
+        {{#each compsValue}}
+        public const int {{nameUpperValue}} = {{@index}};
+        {{/each}}
 
-public sealed partial class {{nameUpper}}Context : Context<{{nameUpper}}Entity> {
+        public const int TotalComponents = {{compsValue.length}};
 
-    public {{nameUpper}}Context()
-        : base(
-            {{nameUpper}}ComponentsLookup.TotalComponents,
-            0,
-            new ContextInfo(
-                "{{nameUpper}}",
-                {{nameUpper}}ComponentsLookup.componentNames,
-                {{nameUpper}}ComponentsLookup.componentTypes
-            )
-        ) {
+        public static readonly Dictionary<string, int> componentsDict = new Dictionary<string, int> () {
+            {{#each compsValue}}
+            {"{{nameUpperValue}}", {{@index}} }{{#unless @last}},{{/unless}}
+            {{/each}}
+        };
+
+        public static readonly string[] componentNames = {
+            {{#each compsValue}}
+            "{{nameUpperValue}}"{{#unless @last}},{{/unless}}
+            {{/each}}
+        };
+
+        public static readonly System.Type[] componentTypes = {
+            {{#each compsValue}}
+            typeof({{#if isUniversalValue}}{{moduleNameRefValue}}.Components.{{classNameValue}}{{else}}Components.{{../nameUpperValue}}.{{classNameValue}}{{/if}}){{#unless @last}},{{/unless}}
+            {{/each}}
+        };
+
+        public static int GetComponentIndex(string name) {
+            int resultIndex = -1;
+            if (componentsDict.TryGetValue(name, out resultIndex)) {
+                return resultIndex;
+            }
+
+            return -1;
+        }
+
+        public static int GetComponentIndex(System.Type t) {
+            for (var i = 0; i < componentTypes.Length; i++) {
+                if (componentTypes[i] == t) return i;
+            }
+
+            return -1;
+        }
     }
-}
-
-public static class {{nameUpper}}ComponentsLookup {
-    {{#each components}}
-    public const int {{nameUpper}} = {{@index}};
     {{/each}}
-
-    public const int TotalComponents = {{components.length}};
-
-    public static readonly string[] componentNames = {
-        {{#each components}}
-        "{{nameUpper}}"{{#unless @last}},{{/unless}}
-        {{/each}}
-    };
-
-    public static readonly System.Type[] componentTypes = {
-        {{#each components}}
-        typeof({{className}}){{#unless @last}},{{/unless}}
-        {{/each}}
-    };
 }
 {{/each}}

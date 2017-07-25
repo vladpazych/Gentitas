@@ -1,0 +1,22 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        // "node_modules": true,
+        "LICENSE.txt": true,
+
+        // "*.*": true,
+        // "project/lib": true,
+        // "project/templates": true,
+        // "project/map.ts": true,
+        // "libcrypto": true
+    },
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "editor.trimAutoWhitespace": true,
+    "editor.acceptSuggestionOnEnter": "on",
+    "editor.renderIndentGuides": false
+}
