@@ -7,7 +7,6 @@ import { IMatch, Match } from './match'
 
 export interface IContext extends INamable {
   readonly entityTypeValue: string
-  contextify<T>(comps: T): T
 }
 
 export class Context extends Namable implements IContext {
@@ -16,86 +15,87 @@ export class Context extends Namable implements IContext {
   compsValue: IComp[] = []
   indiciesValue: IComp[] = []
 
-  constructor(name?: string) {
+  constructor(comps?: {}, name?: string) {
     super(name || '', '', 'Context')
     this.entityTypeValue = this.nameUpperValue + 'Entity'
-  }
 
-  // Injects itself to components and groups as context
-  // and add all those components to this.components
-  contextify<T>(comps: T): T {
-    let c = comps as {}
-    if (c) {
-      for (let key in c) {
-        let ccomp = c[key] as Comp
-        let cgroup = c[key] as Group
-        if (ccomp) {
-          if (this.compsValue.indexOf(ccomp) !== -1) continue
-
-          // If it is universal it should keep it's data
-          ccomp.contextValue = this
-
-          if (ccomp.isUniversalValue) {
-            // It's a dirty hack, but I am fucking tired. Will fix later.
-            // If you see this, I probably forgot about it. Sorry dude, or gal...
-            let interfaceName = ccomp.moduleNameRefValue + '.IEntity'
-            if (this.entityInterfacesValue.indexOf(interfaceName) === -1) this.entityInterfacesValue.push(interfaceName)
-          }
-
-          this.compsValue.push(ccomp)
-
-          if (ccomp.indexValue) {
-            this.indiciesValue.push(ccomp)
-          }
-
-          if (ccomp.groupValue) {
-            let ccompGroup = ccomp.groupValue as Group
-            ccompGroup.contextValue = this
-          }
-        } else if (cgroup) cgroup.contextValue = this
-      }
+    for (let key in comps) {
+      console.log(key)
+      this.compsValue.push(comps[key])
     }
-
-    return comps
-  }
-
-  universify<T>(comps: T): T {
-    let c = comps as {}
-    if (c) {
-      for (let key in c) {
-        let ccomp = c[key] as Comp
-        let cgroup = c[key] as Group
-        if (ccomp) {
-          ccomp.contextValue = this
-          if (this.compsValue.indexOf(ccomp) !== -1) continue
-
-          this.compsValue.push(ccomp)
-          ccomp.isUniversalValue = true
-
-          if (ccomp.indexValue) {
-            this.indiciesValue.push(ccomp)
-          }
-
-          if (ccomp.groupValue) {
-            let ccompGroup = ccomp.groupValue as Group
-            ccompGroup.contextValue = this
-          }
-        } else if (cgroup) cgroup.contextValue = this
-      }
-    }
-
-    return comps
   }
 }
 
-export function context(): IContext {
-  let el = new Context()
+export function context<T>(comps?: T): T {
+  let el = new Context(comps)
   map.AddModule(el.moduleNameValue, 'contexts', el)
-  return el
+  return comps
 }
 
-export function universify<T>(comps: T): T {
-  let el = new Context('universal')
-  map.AddModule(el.moduleNameValue, 'contextsUniversal', el)
-  return el.universify(comps)
-}
+
+
+// // Injects itself to components and groups as context
+//   // and add all those components to this.components
+//   contextify<T>(comps: T): T {
+//     let c = comps as {}
+//     if (c) {
+//       for (let key in c) {
+//         let ccomp = c[key] as Comp
+//         let cgroup = c[key] as Group
+//         if (ccomp) {
+//           if (this.compsValue.indexOf(ccomp) !== -1) continue
+
+//           // If it is universal it should keep it's data
+//           ccomp.contextValue = this
+
+//           if (ccomp.isUniversalValue) {
+//             // It's a dirty hack, but I am fucking tired. Will fix later.
+//             // If you see this, I probably forgot about it. Sorry dude, or gal...
+//             let interfaceName = ccomp.moduleNameRefValue + '.IEntity'
+//             if (this.entityInterfacesValue.indexOf(interfaceName) === -1) this.entityInterfacesValue.push(interfaceName)
+//           }
+
+//           this.compsValue.push(ccomp)
+
+//           if (ccomp.indexValue) {
+//             this.indiciesValue.push(ccomp)
+//           }
+
+//           if (ccomp.groupValue) {
+//             let ccompGroup = ccomp.groupValue as Group
+//             ccompGroup.contextValue = this
+//           }
+//         } else if (cgroup) cgroup.contextValue = this
+//       }
+//     }
+
+//     return comps
+//   }
+
+//   universify<T>(comps: T): T {
+//     let c = comps as {}
+//     if (c) {
+//       for (let key in c) {
+//         let ccomp = c[key] as Comp
+//         let cgroup = c[key] as Group
+//         if (ccomp) {
+//           ccomp.contextValue = this
+//           if (this.compsValue.indexOf(ccomp) !== -1) continue
+
+//           this.compsValue.push(ccomp)
+//           ccomp.isUniversalValue = true
+
+//           if (ccomp.indexValue) {
+//             this.indiciesValue.push(ccomp)
+//           }
+
+//           if (ccomp.groupValue) {
+//             let ccompGroup = ccomp.groupValue as Group
+//             ccompGroup.contextValue = this
+//           }
+//         } else if (cgroup) cgroup.contextValue = this
+//       }
+//     }
+
+//     return comps
+//   }

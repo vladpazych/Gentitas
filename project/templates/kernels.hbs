@@ -29,7 +29,7 @@ namespace {{moduleNameValue}}.Kernels {
 
 			{{#each contractsValue}}
 			{{!--If it is a kernel--}}
-			{{#if kernelValue}}
+			{{#if isKernelValue}}
 			this.Add(new {{moduleNameValue}}.Kernels.{{classNameValue}}());
 			{{else}}
 			this.Add(new {{moduleNameValue}}.Contracts.{{#if namespaceValue}}{{namespaceValue}}.{{/if}}{{nameUpperValue}}(contexts));
@@ -59,7 +59,7 @@ namespace {{moduleNameValue}}.Kernels {
 
 			{{#each contractsValue}}
 			{{!--If it is a kernel--}}
-			{{#if kernelValue}}
+			{{#if isKernelValue}}
 			this.Add(new {{moduleNameValue}}.Kernels.{{classNameValue}}());
 			{{else}}
 			this.Add(new {{moduleNameValue}}.Contracts.{{#if namespaceValue}}{{namespaceValue}}.{{/if}}{{nameUpperValue}}(contexts));
