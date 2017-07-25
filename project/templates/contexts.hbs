@@ -79,18 +79,6 @@ namespace {{@key}} {
     }
 
     {{#each contexts}}
-    public sealed partial class {{nameUpperValue}}Entity : Entity {
-        public {{nameUpperValue}}Entity AddComponentByName(string name) {
-            var componentIndex = {{nameUpperValue}}ComponentsLookup.GetComponentIndex(name);
-            if (componentIndex == -1) throw new System.Exception("There is no component named " + name);
-            return this.AddComponentByIndex(componentIndex);
-        }
-
-        public {{nameUpperValue}}Entity AddComponentByIndex(int index) {
-            this.AddComponent(index, this.CreateComponent(index, {{nameUpperValue}}ComponentsLookup.componentTypes[index]));
-            return this;
-        }
-    }
 
     public partial class {{nameUpperValue}}Context : Context<{{nameUpperValue}}Entity> {
         public {{nameUpperValue}}Context()

@@ -8,7 +8,7 @@
 using Entitas;
 using System.Collections.Generic;
 
-{{#each modules}}
+{{!-- {{#each modules}}
 {{#each contextsUniversal}}
 {{#unless contextValue}}
 namespace {{moduleNameValue}}.Components  {
@@ -36,7 +36,7 @@ namespace {{moduleNameValue}} {
 
 {{/unless}}
 {{/each}}
-{{/each}}
+{{/each}} --}}
 
 {{#each modules}}
 {{#each contexts}}
@@ -48,89 +48,5 @@ namespace {{moduleNameValue}}.Components.{{nameUpperValue}}  {
     {{/each}}
 }
 
-{{/each}}
-
-{{#each contexts}}
-namespace {{moduleNameValue}} {
-    public sealed partial class {{nameUpperValue}}Matcher {
-        {{#each compsValue}}
-        static IMatcher<{{../nameUpperValue}}Entity> _matcher{{nameUpperValue}};
-
-        public static IMatcher<{{../nameUpperValue}}Entity> {{nameUpperValue}} {
-            get {
-                if(_matcher{{nameUpperValue}} == null) {
-                    var matcher = (Matcher<{{../nameUpperValue}}Entity>)Matcher<{{../nameUpperValue}}Entity>.AllOf({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
-                    matcher.componentNames = {{../nameUpperValue}}ComponentsLookup.componentNames;
-                    _matcher{{nameUpperValue}} = matcher;
-                }
-
-                return _matcher{{nameUpperValue}};
-            }
-        }
-
-        {{/each}}
-    }
-}
-
-{{/each}}
-
-{{#each contexts}}
-namespace {{moduleNameValue}} {
-    public partial class {{nameUpperValue}}Entity {{#if entityInterfacesValue.length}}: {{#each entityInterfacesValue}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}{{/if}} {
-        {{#each compsValue}}
-
-        // {{classNameValue}}
-        {{#if fieldValue}}
-        public {{fieldValue}} {{nameValue}} { 
-            get {
-                var component = GetComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
-                if (component == null) throw new System.Exception("ComponentDoesNotExist. You trying to get {{nameUpperValue}}, but it is not assigned. Try checking if entity has{{nameValue}}.");
-                return ((Components.{{../nameUpperValue}}.{{classNameValue}})component).value;
-            } 
-            set {
-                var component = CreateComponent<Components.{{../nameUpperValue}}.{{classNameValue}}>({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
-                component.value = value;
-                ReplaceComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}}, component);
-            }
-        }
-
-        public bool has{{nameUpperValue}} { 
-            get { return HasComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}}); } 
-            set { 
-                if (value != has{{nameUpperValue}}) {
-                    if (value) {
-                        var component = CreateComponent<Components.{{../nameUpperValue}}.{{classNameValue}}>({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
-                        component.value = default({{fieldValue}});
-                        AddComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}}, component);
-                    } else {
-                        RemoveComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
-                    }
-                }
-            }
-        } 
-
-        public void Ping{{nameUpperValue}}() {
-            var component = GetComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
-            if (component != null) ReplaceComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}}, component);
-        }
-
-        {{else}}
-        static readonly {{#if isUniversalValue}}{{moduleNameRefValue}}.Components.{{classNameValue}}{{else}}Components.{{../nameUpperValue}}.{{classNameValue}}{{/if}} {{toLower classNameValue}} = new {{#if isUniversalValue}}{{moduleNameRefValue}}.Components.{{classNameValue}}{{else}}Components.{{../nameUpperValue}}.{{classNameValue}}{{/if}}();
-        public bool has{{nameUpperValue}} {
-            get { return HasComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}}); }
-            set {
-                if (value != has{{nameUpperValue}}) {
-                    if (value) {
-                        AddComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}}, {{toLower classNameValue}});
-                    } else {
-                        RemoveComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
-                    }
-                }
-            }
-        }
-        {{/if}}
-        {{/each}}
-    }
-}
 {{/each}}
 {{/each}}

@@ -14,9 +14,10 @@
         "./KernelService.cs": "./project/templates/kernelService.hbs",
         "./Contexts.cs": "./project/templates/contexts.hbs",
         "./Components.cs": "./project/templates/components.hbs",
+        "./Entities.cs": "./project/templates/entities.hbs",
+        "./Matchers.cs": "./project/templates/matchers.hbs",
         "./Groups.cs": "./project/templates/groups.hbs",
         "./ReactiveContracts.cs": "./project/templates/contractsReactive.hbs",
-        "./MultiReactiveContracts.cs": "./project/templates/contractsMultiReactive.hbs",
         "./ExecuteContracts.cs": "./project/templates/contractsExecute.hbs",
         "./InitializeContracts.cs": "./project/templates/contractsInitialize.hbs"
     },
