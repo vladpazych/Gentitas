@@ -18,6 +18,7 @@ export class Comp extends Namable implements IComp {
   indexValue: boolean
   indexUniqueValue: boolean
   groupValue: IGroup
+  isCompValue: boolean = true
 
   constructor(field?: string, name: string = '') {
     super('', '', 'Component')

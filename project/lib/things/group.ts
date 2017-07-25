@@ -13,6 +13,7 @@ export class Group extends Namable implements IGroup {
   contextValue: IContext
   matchValue: IMatch
   singleValue: boolean = false
+  isGroupValue: boolean = true
 
   constructor(match: IMatch, single: boolean = false, name: string = '') {
     super(name, '', 'Group')
