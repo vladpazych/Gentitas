@@ -20,7 +20,6 @@ export class Context extends Namable implements IContext {
     this.entityTypeValue = this.nameUpperValue + 'Entity'
 
     for (let key in comps) {
-      console.log(key)
       this.compsValue.push(comps[key])
     }
   }

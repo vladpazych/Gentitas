@@ -6,11 +6,11 @@ const logic = new (class {
   some = initializeContract()
 })()
 
+const kernels = new (class {
+  main = kernel()
+    .add(logic.some)
+})()
+
 export default module(
-  $this,
-  { state },
-  new (class {
-    main = kernel()
-      .add(logic.some)
-  })()
+  $this, { state }, kernels
 )

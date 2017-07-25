@@ -45,10 +45,10 @@ export class Kernel extends BaseKernel implements IKernel {
 //
 // Partial
 //
-export interface IPartialKernel extends IBaseKernel {
+export interface IKernelPartial extends IBaseKernel {
 }
 
-export class PartialKernel extends BaseKernel implements IPartialKernel {
+export class KernelPartial extends BaseKernel implements IKernelPartial {
   isKernelPartialValue: boolean
 
   constructor(name?: string) {
@@ -67,6 +67,6 @@ export function kernel(): IKernel {
 
 export function kernelPartial(): IKernel {
   let el = new Kernel()
-  map.AddModule(el.moduleNameValue, 'partialKernels', el)
+  map.AddModule(el.moduleNameValue, 'KernelPartials', el)
   return el
 }

@@ -23,7 +23,12 @@ export function Name() {
 
   let nameLine = fileCache[fileName][lineNumber - 1]
   let name = nameLine.split('=')[0].trim()
-  name = name.split('.')[1]
+  if (name.indexOf('const ') !== -1 || name.indexOf('var ') !== -1 || name.indexOf('let ') !== -1) {
+    name = name.split(' ')[1]
+    console.log(name)
+  }
+
+  if (name.indexOf('.') !== -1) name = name.split('.')[1]
 
   return toLower(name)
 }
