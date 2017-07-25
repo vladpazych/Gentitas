@@ -2,6 +2,8 @@ const fs = require('fs')
 let stackTrace = require('stack-trace')
 import toLower from './toLower'
 import toUpper from './toUpper'
+import servant from './servant'
+export { servant }
 
 //
 // Name

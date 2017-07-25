@@ -1,4 +1,4 @@
 import map from '../map'
 
 
-console.log(map['modules'])
+// console.log(map['modules'])

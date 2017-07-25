@@ -8,7 +8,7 @@ export const state = context(new (class {
 
   pther = comp($.float).index()
   ddd = comp($.float).indexUnique()
-  yo = comp().group()
+  yo = comp().group().indexUnique()
   yo2 = comp().groupSingle()
 
   some = group(this.ddd)
