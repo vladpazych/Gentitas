@@ -24,6 +24,7 @@ export class Namable implements INamable {
   moduleNameRefValue: string
   moduleNameMergedValue: string
   moduledClassNameValue: string
+  moduledInterfaceNameValue: string
   fileNameValue: string
 
   constructor(name?: string, nameSuffix?: string, classSuffix?: string, interfaceSuffix?: string) {
@@ -49,5 +50,6 @@ export class Namable implements INamable {
     this.moduleNameRefValue = 'global::' + moduleName
     this.moduleNameMergedValue = moduleName.replace(/\./g, '')
     this.moduledClassNameValue = this.moduleNameValue + '.' + this.classNameValue
+    this.moduledInterfaceNameValue = this.moduleNameValue + '.' + this.interfaceNameValue
   }
 }

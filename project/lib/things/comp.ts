@@ -13,7 +13,7 @@ export interface IComp extends INamable {
 
 export class Comp extends Namable implements IComp {
   contextValue: IContext
-  isUniversalValue: boolean
+  isFakeValue: boolean
   fieldValue: string
   indexValue: boolean
   indexUniqueValue: boolean
@@ -27,13 +27,13 @@ export class Comp extends Namable implements IComp {
 
   index(value: boolean = true) {
     if (!this.fieldValue) helpers.servant.message(`It\'s impossible to create index from flag component`, `${this.moduledClassNameValue}`)
-    this.indexValue = value
+    else this.indexValue = value
     return this
   }
 
   indexUnique(value: boolean = true) {
     this.index(true)
-    this.indexUniqueValue = value
+    if (this.indexValue) this.indexUniqueValue = value
 
     return this
   }

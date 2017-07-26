@@ -9,9 +9,34 @@ using Entitas;
 using System.Collections.Generic;
 
 {{#each modules}}
+//
+// {{@key}}
+//
+
+// Fake Entities
+{{#each fakeContexts}}
+namespace {{moduleNameValue}} {
+    public interface {{entityInterfaceValue}} : global::Entitas.IEntity {
+        {{#each compsValue}}
+
+        // {{classNameValue}}
+        {{#if fieldValue}}
+        {{fieldValue}} {{nameValue}} { get; set; }
+        bool has{{nameUpperValue}} { get; set; } 
+        void Ping{{nameUpperValue}}();
+
+        {{else}}
+        bool has{{nameUpperValue}} { get; set; } 
+        {{/if}}
+        {{/each}}
+    }
+}
+
+{{/each}}
+// Entities
 {{#each contexts}}
 namespace {{moduleNameValue}} {
-    public sealed partial class {{nameUpperValue}}Entity: Entitas.Entity, Entitas.IEntity{{#if entityInterfacesValue}}, {{#each entityInterfacesValue}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}{{/if}} {
+    public sealed partial class {{nameUpperValue}}Entity: Entitas.Entity, Entitas.IEntity{{#if fakeEntityInterfacesValue}}, {{#each fakeEntityInterfacesValue}}{{global this}}{{#unless @last}}, {{/unless}}{{/each}}{{/if}} {
         public {{nameUpperValue}}Entity AddComponentByName(string name) {
             var componentIndex = {{nameUpperValue}}ComponentsLookup.GetComponentIndex(name);
             if (componentIndex == -1) throw new System.Exception("There is no component named " + name);
@@ -30,11 +55,11 @@ namespace {{moduleNameValue}} {
         public {{fieldValue}} {{nameValue}} { 
             get {
                 var component = GetComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
-                if (component == null) throw new System.Exception("ComponentDoesNotExist. You trying to get {{nameUpperValue}}, but it is not assigned. Try checking if entity has{{nameValue}}.");
-                return ((Components.{{../nameUpperValue}}.{{classNameValue}})component).value;
+                if (component == null) throw new System.Exception("Component Does Not Exist. You are trying to get {{nameUpperValue}}, but it is not assigned. Try checking if entity has{{nameValue}}.");
+                return (({{#if isFakeValue}}{{global moduleNameValue}}.Components.{{contextValue.nameUpperValue}}.{{classNameValue}}{{else}}Components.{{../nameUpperValue}}.{{classNameValue}}{{/if}})component).value;
             } 
             set {
-                var component = CreateComponent<Components.{{../nameUpperValue}}.{{classNameValue}}>({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
+                var component = CreateComponent<{{#if isFakeValue}}{{global moduleNameValue}}.Components.{{contextValue.nameUpperValue}}.{{classNameValue}}{{else}}Components.{{../nameUpperValue}}.{{classNameValue}}{{/if}}>({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
                 component.value = value;
                 ReplaceComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}}, component);
             }
@@ -45,7 +70,7 @@ namespace {{moduleNameValue}} {
             set { 
                 if (value != has{{nameUpperValue}}) {
                     if (value) {
-                        var component = CreateComponent<Components.{{../nameUpperValue}}.{{classNameValue}}>({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
+                        var component = CreateComponent<{{#if isFakeValue}}{{global moduleNameValue}}.Components.{{contextValue.nameUpperValue}}.{{classNameValue}}{{else}}Components.{{../nameUpperValue}}.{{classNameValue}}{{/if}}>({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}});
                         component.value = default({{fieldValue}});
                         AddComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}}, component);
                     } else {
@@ -61,7 +86,7 @@ namespace {{moduleNameValue}} {
         }
 
         {{else}}
-        static readonly {{#if isUniversalValue}}{{moduleNameRefValue}}.Components.{{classNameValue}}{{else}}Components.{{../nameUpperValue}}.{{classNameValue}}{{/if}} {{toLower classNameValue}} = new {{#if isUniversalValue}}{{moduleNameRefValue}}.Components.{{classNameValue}}{{else}}Components.{{../nameUpperValue}}.{{classNameValue}}{{/if}}();
+        static readonly {{#if isFakeValue}}{{global moduleNameValue}}.Components.{{contextValue.nameUpperValue}}.{{classNameValue}}{{else}}Components.{{../nameUpperValue}}.{{classNameValue}}{{/if}} {{toLower classNameValue}} = new {{#if isFakeValue}}{{global moduleNameValue}}.Components.{{contextValue.nameUpperValue}}.{{classNameValue}}{{else}}Components.{{../nameUpperValue}}.{{classNameValue}}{{/if}}();
         public bool has{{nameUpperValue}} {
             get { return HasComponent({{../nameUpperValue}}ComponentsLookup.{{nameUpperValue}}); }
             set {
@@ -78,5 +103,8 @@ namespace {{moduleNameValue}} {
         {{/each}}
     }
 }
+
 {{/each}}
+
+
 {{/each}}

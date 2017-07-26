@@ -1,5 +1,5 @@
 import { match } from './things/match'
-import { context } from './things/context'
+import { context, fakeContext } from './things/context'
 import { comp } from './things/comp'
 import { group } from './things/group'
 import { executeContract, initializeContract, reactiveContract, multiReactiveContract } from './things/contracts'
@@ -11,6 +11,7 @@ import alias from './things/alias'
 export {
   match,
   context,
+  fakeContext,
   kernel,
   comp,
   group,

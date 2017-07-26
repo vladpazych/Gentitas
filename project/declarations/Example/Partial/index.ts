@@ -1,17 +1,14 @@
 import { module, kernel, match, initializeContract, executeContract, reactiveContract, namespace } from '@lib'
 import $this from './alias'
-import { state, event } from './contexts'
-
+import { trash } from './contexts'
 
 const logic = new (class {
-  init = initializeContract()
-
-  // eventProcess = reactiveContract()
-
+  some = initializeContract()
 })()
 
 const kernels = new (class {
   main = kernel()
+    .add(logic.some)
 })()
 
-export default module($this, { state }, kernels)
+export default module($this, { trash }, kernels)

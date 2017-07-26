@@ -8,45 +8,32 @@
 using Entitas;
 using System.Collections.Generic;
 
-{{!-- {{#each modules}}
-{{#each contextsUniversal}}
-{{#unless contextValue}}
-namespace {{moduleNameValue}}.Components  {
+{{#each modules}}
+//
+// {{@key}}
+//
+
+// Fake Contexts
+{{#each fakeContexts}}
+namespace {{moduleNameValue}}.Components.{{nameUpperValue}}  {
 {{#each compsValue}}
     public partial class {{classNameValue}}: IComponent { {{#if fieldValue}}public {{fieldValue}} value;{{/if}} }
 {{/each}}
 }
 
-namespace {{moduleNameValue}} {
-    public interface IEntity : global::Entitas.IEntity {
-        {{#each compsValue}}
-
-        // {{classNameValue}}
-        {{#if fieldValue}}
-        {{fieldValue}} {{nameValue}} { get; set; }
-        bool has{{nameUpperValue}} { get; set; } 
-        void Ping{{nameUpperValue}}();
-
-        {{else}}
-        bool has{{nameUpperValue}} { get; set; } 
-        {{/if}}
-        {{/each}}
-    }
-}
-
-{{/unless}}
 {{/each}}
-{{/each}} --}}
 
-{{#each modules}}
+// Contexts
 {{#each contexts}}
 namespace {{moduleNameValue}}.Components.{{nameUpperValue}}  {
     {{#each compsValue}}
-    {{#unless isUniversalValue}}
+    {{#unless isFakeValue}}
     public partial class {{classNameValue}}: IComponent { {{#if fieldValue}}public {{fieldValue}} value;{{/if}} }
     {{/unless}}
     {{/each}}
 }
 
 {{/each}}
+
+
 {{/each}}

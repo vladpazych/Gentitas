@@ -5,14 +5,21 @@
         "**/.svn": true,
         "**/.hg": true,
         "**/.DS_Store": true,
-        // "node_modules": true,
+        "node_modules": true,
         "LICENSE.txt": true,
+        "libcrypto": true,
+        "tslint.json": true,
+        "tsconfig.json": true,
+        "package.json": true,
+        "gentitas.js": true,
+        "README.md": true,
+        ".gitignore": true
 
+        // Comment this section to open the hood
         // "*.*": true,
         // "project/lib": true,
         // "project/templates": true,
         // "project/map.ts": true,
-        // "libcrypto": true
     },
     "editor.tabSize": 2,
     "editor.insertSpaces": true,

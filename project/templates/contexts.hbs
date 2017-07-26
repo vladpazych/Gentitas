@@ -144,7 +144,7 @@ namespace {{@key}} {
 
         public static readonly System.Type[] componentTypes = {
             {{#each compsValue}}
-            typeof({{#if isUniversalValue}}{{moduleNameRefValue}}.Components.{{classNameValue}}{{else}}Components.{{../nameUpperValue}}.{{classNameValue}}{{/if}}){{#unless @last}},{{/unless}}
+            typeof({{#if isFakeValue}}{{global moduleNameValue}}.Components.{{contextValue.nameUpperValue}}.{{classNameValue}}{{else}}Components.{{../nameUpperValue}}.{{classNameValue}}{{/if}}){{#unless @last}},{{/unless}}
             {{/each}}
         };
 

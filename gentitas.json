@@ -26,6 +26,7 @@
         "toLower": "./project/lib/helpers/toLower",
         "toUpper": "./project/lib/helpers/toUpper",
         "ifCond": "./project/lib/helpers/ifCond",
-        "len": "./project/lib/helpers/len"
+        "len": "./project/lib/helpers/len",
+        "global": "./project/lib/helpers/global"
     }
 }

@@ -27,9 +27,7 @@
     "prettified": "0.0.7",
     "promise": "^7.1.1",
     "stack-trace": "0.0.9",
-    "typescript": "^2.1.4"
-  },
-  "devDependencies": {
+    "typescript": "^2.1.4",
     "gulp-plumber": "^1.1.0",
     "gulp-replace": "^0.5.4"
   }
