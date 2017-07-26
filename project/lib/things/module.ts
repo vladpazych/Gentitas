@@ -1,3 +1,3 @@
-export function module<T, C, K>(alias: T, contexts: C, kernels: K): { alias: T, contexts: C, kernels: K } {
-  return { alias, contexts, kernels }
+export function module<T, C, K>($: T, contexts: C, kernels: K): { $: T, contexts: C, kernels: K } {
+  return { $, contexts, kernels }
 }
