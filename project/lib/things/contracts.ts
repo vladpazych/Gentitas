@@ -127,11 +127,31 @@ export interface IMultiReactiveContract extends IExecuteContract {
 }
 
 export class MultiReactiveContract extends ExecuteContract implements IMultiReactiveContract {
+  contextsValue: Context[] = []
   triggersValue: Array<{ match: IMatch, eventType: string }> = []
 
-  constructor(name?: string) {
+  constructor(contexts: Array<{}>, name?: string) {
     super(name)
     this.systemTypeValue = 'MultiReactive'
+
+    contexts.forEach((context) => {
+      // Context here is a list of components, so we need to get real context from one of them
+      let keys = Object.keys(context)
+      for (let i in keys) {
+        let key = keys[i]
+        let comp = context[key] as Comp
+        if (comp.isFakeValue) {
+          helpers.messageRobot.message(
+            'FakeContext can not be added to MultiReactiveContract',
+            'Context: ' + comp.contextValue.classNameValue,
+            'Contract: ' + this.classNameValue,
+            'Module: ' + this.moduleNameValue)
+
+          this.block(true)
+          break
+        }
+      }
+    })
   }
 
   //
@@ -176,8 +196,8 @@ export function reactiveContract(): IReactiveContract {
   return el
 }
 
-export function multiReactiveContract(): IMultiReactiveContract {
-  let el = new MultiReactiveContract()
+export function multiReactiveContract(...contexts: Array<{}>): IMultiReactiveContract {
+  let el = new MultiReactiveContract(contexts)
   map.AddModule(el.moduleNameValue, 'multiReactiveContracts', el, false)
   map.AddModule(el.moduleNameValue, 'contracts', el, false)
   return el

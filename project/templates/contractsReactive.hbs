@@ -12,6 +12,7 @@ using System.Collections.Generic;
 {{#each modules}}
 namespace {{@key}}.Contracts {
 {{#each reactiveContracts}}
+    {{#unless isBlockedValue}}
     {{#if namespaceValue}}namespace {{namespaceValue}} { {{/if}}
         namespace Base {
             public abstract class {{nameUpperValue}}: ReactiveSystem<{{contextValue.moduleNameValue}}.{{contextValue.nameUpperValue}}Entity> {
@@ -68,7 +69,8 @@ namespace {{@key}}.Contracts {
             public {{nameUpperValue}} (Contexts contexts) : base(contexts) { }
         }
     {{#if namespaceValue}} } {{/if}}
-
+    {{/unless}}
+    
 {{/each}}
 
 }

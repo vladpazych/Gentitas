@@ -15,4 +15,4 @@ export const state = context(new (class {
 
 export const input = context(new (class {
   cool = comp()
-})())
+})(), event)

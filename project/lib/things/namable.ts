@@ -1,9 +1,10 @@
 import map from '../../map'
 import * as helpers from '../helpers/common'
 import { Context, IContext } from './context'
+import { Blockable, IBlockable } from './blockable'
 import * as path from 'path'
 
-export interface INamable {
+export interface INamable extends IBlockable {
   readonly nameValue: string
   readonly nameUpperValue: string
   readonly namespaceValue: string
@@ -13,7 +14,7 @@ export interface INamable {
   readonly interfaceNameValue: string
 }
 
-export class Namable implements INamable {
+export class Namable extends Blockable implements INamable {
   nameValue: string
   nameUpperValue: string
   namespaceValue: string
@@ -21,13 +22,14 @@ export class Namable implements INamable {
   interfaceNameValue: string
   moduleNameValue: string
   moduleNameShortValue: string
-  moduleNameRefValue: string
   moduleNameMergedValue: string
   moduledClassNameValue: string
   moduledInterfaceNameValue: string
   fileNameValue: string
 
   constructor(name?: string, nameSuffix?: string, classSuffix?: string, interfaceSuffix?: string) {
+    super()
+    
     this.nameValue = name || helpers.Name() + (nameSuffix || '')
     this.fileNameValue = helpers.FileName()
     this.nameUpperValue = helpers.toUpper(this.nameValue)
@@ -47,7 +49,6 @@ export class Namable implements INamable {
     }
 
     this.moduleNameValue = moduleName
-    this.moduleNameRefValue = 'global::' + moduleName
     this.moduleNameMergedValue = moduleName.replace(/\./g, '')
     this.moduledClassNameValue = this.moduleNameValue + '.' + this.classNameValue
     this.moduledInterfaceNameValue = this.moduleNameValue + '.' + this.interfaceNameValue
