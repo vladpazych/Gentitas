@@ -16,7 +16,7 @@ namespace {{@key}}.Contracts {
         namespace Base {
             public abstract class {{nameUpperValue}}: ReactiveSystem<{{contextValue.moduleNameValue}}.{{contextValue.nameUpperValue}}Entity> {
                 protected {{contextValue.moduleNameValue}}.{{contextValue.nameUpperValue}}Context context;
-                {{#if spyValue}}
+                {{#if isSpyValue}}
                 {{contextValue.moduleNameValue}}.Contexts spyContexts { get { return {{contextValue.moduleNameValue}}.Contexts.sharedInstance; } }
                 {{/if}}
                 Contexts contexts;
@@ -25,8 +25,8 @@ namespace {{@key}}.Contracts {
                 protected {{classNameValue}} {{nameValue}};
                 {{/each}}
 
-                public {{nameUpperValue}} (Contexts contexts) : base({{#if spyValue}}{{contextValue.moduleNameValue}}.Contexts.sharedInstance{{else}}contexts{{/if}}.{{contextValue.nameValue}}) {
-                    this.context = {{#if spyValue}}spyContexts{{else}}contexts{{/if}}.{{contextValue.nameValue}};
+                public {{nameUpperValue}} (Contexts contexts) : base({{#if isSpyValue}}{{contextValue.moduleNameValue}}.Contexts.sharedInstance{{else}}contexts{{/if}}.{{contextValue.nameValue}}) {
+                    this.context = {{#if isSpyValue}}spyContexts{{else}}contexts{{/if}}.{{contextValue.nameValue}};
                     this.contexts = contexts;
 
                     {{#each ../contexts}}
@@ -39,9 +39,9 @@ namespace {{@key}}.Contracts {
                         new IGroup<{{contextValue.moduleNameValue}}.{{contextValue.nameUpperValue}}Entity>[] { 
                             {{#each triggersValue}}
                             context.GetGroup(Matcher<{{../contextValue.moduleNameValue}}.{{../contextValue.nameUpperValue}}Entity>{{#if match.allOf.length}}
-                                .AllOf({{#each match.allOf}}{{contextValue.moduleNameValue}}.{{contextValue.nameUpperValue}}Matcher.{{nameUpperValue}}{{#unless @last}}, {{/unless}}{{/each}}){{/if}}{{#if match.anyOf.length}}
-                                .AnyOf({{#each match.anyOf}}{{contextValue.moduleNameValue}}.{{contextValue.nameUpperValue}}Matcher.{{nameUpperValue}}{{#unless @last}}, {{/unless}}{{/each}}){{/if}}{{#if match.noneOf.length}}
-                                .NoneOf({{#each match.noneOf}}{{contextValue.moduleNameValue}}.{{contextValue.nameUpperValue}}Matcher.{{nameUpperValue}}{{#unless @last}}, {{/unless}}{{/each}}){{/if}}){{#unless @last}},{{/unless}}
+                                .AllOf({{#each match.allOf}}{{moduleNameValue}}.{{../../contextValue.nameUpperValue}}Matcher.{{nameUpperValue}}{{#unless @last}}, {{/unless}}{{/each}}){{/if}}{{#if match.anyOf.length}}
+                                .AnyOf({{#each match.anyOf}}{{moduleNameValue}}.{{../../contextValue.nameUpperValue}}Matcher.{{nameUpperValue}}{{#unless @last}}, {{/unless}}{{/each}}){{/if}}{{#if match.noneOf.length}}
+                                .NoneOf({{#each match.noneOf}}{{moduleNameValue}}.{{../../contextValue.nameUpperValue}}Matcher.{{nameUpperValue}}{{#unless @last}}, {{/unless}}{{/each}}){{/if}}){{#unless @last}},{{/unless}}
                             {{/each}}
                         },
                         new GroupEvent[] { 

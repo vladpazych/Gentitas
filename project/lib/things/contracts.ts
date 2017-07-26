@@ -71,7 +71,7 @@ export interface IReactiveContract extends IExecuteContract {
 export class ReactiveContract extends ExecuteContract implements IReactiveContract {
   triggersValue: Array<{ match: IMatch, eventType: string }> = []
   contextValue: IContext
-  spyValue: boolean
+  isSpyValue: boolean
 
   constructor(name?: string) {
     super(name)
@@ -84,7 +84,6 @@ export class ReactiveContract extends ExecuteContract implements IReactiveContra
   private trigger(match: IMatch, eventType: string) {
     this.triggersValue.push({ match, eventType })
     this._contextify(match)
-    if (this.moduleNameValue !== this.contextValue.moduleNameValue) this.spyValue = true
     return this
   }
 
@@ -114,8 +113,43 @@ export class ReactiveContract extends ExecuteContract implements IReactiveContra
         if (!comp.isFakeValue && comp.contextValue && comp.contextValue.nameValue !== this.contextValue.nameValue) {
           helpers.messageRobot.message('Context inconsistency in contract', this.moduleNameValue + '.' + this.nameValue, comp.nameValue)
         }
+
+        if (this.contextValue && this.moduleNameValue !== this.contextValue.moduleNameValue) this.isSpyValue = true
       }
     }
+  }
+}
+
+
+export interface IMultiReactiveContract extends IExecuteContract {
+  enter(match: IMatch): this
+  left(match: IMatch): this
+}
+
+export class MultiReactiveContract extends ExecuteContract implements IMultiReactiveContract {
+  triggersValue: Array<{ match: IMatch, eventType: string }> = []
+
+  constructor(name?: string) {
+    super(name)
+    this.systemTypeValue = 'MultiReactive'
+  }
+
+  //
+  // Trigger
+  //
+  private trigger(match: IMatch, eventType: string) {
+    this.triggersValue.push({ match, eventType })
+    return this
+  }
+
+  enter(match: IMatch) {
+    this.trigger(match, EventType.onEntered)
+    return this
+  }
+
+  left(match: IMatch) {
+    this.trigger(match, EventType.onLeft)
+    return this
   }
 }
 
@@ -138,6 +172,13 @@ export function executeContract(): IExecuteContract {
 export function reactiveContract(): IReactiveContract {
   let el = new ReactiveContract()
   map.AddModule(el.moduleNameValue, 'reactiveContracts', el, false)
+  map.AddModule(el.moduleNameValue, 'contracts', el, false)
+  return el
+}
+
+export function multiReactiveContract(): IMultiReactiveContract {
+  let el = new MultiReactiveContract()
+  map.AddModule(el.moduleNameValue, 'multiReactiveContracts', el, false)
   map.AddModule(el.moduleNameValue, 'contracts', el, false)
   return el
 }
