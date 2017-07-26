@@ -83,7 +83,7 @@ export class ReactiveContract extends ExecuteContract implements IReactiveContra
   //
   private trigger(match: IMatch, eventType: string) {
     this.triggersValue.push({ match, eventType })
-    this.contextify(match)
+    this._contextify(match)
     if (this.moduleNameValue !== this.contextValue.moduleNameValue) this.spyValue = true
     return this
   }
@@ -100,19 +100,19 @@ export class ReactiveContract extends ExecuteContract implements IReactiveContra
 
 
   // Set context and check that all component in matcher are from same context
-  private contextify(match: IMatch) {
+  private _contextify(match: IMatch) {
     let m = match as Match
 
     if (m) {
       for (let i in m.combined) {
         let comp = (m.combined[i] as Comp)
 
-        if (!this.contextValue && !comp.isUniversalValue) {
+        if (!this.contextValue && !comp.isFakeValue) {
           this.contextValue = (m.combined[i] as Comp).contextValue
         }
 
-        if (!comp.isUniversalValue && comp.contextValue.nameValue !== this.contextValue.nameValue) {
-          console.log('Context inconsistency in contract ' + this.moduleNameValue + '.' + this.nameValue, comp.nameValue)
+        if (!comp.isFakeValue && comp.contextValue && comp.contextValue.nameValue !== this.contextValue.nameValue) {
+          helpers.messageRobot.message('Context inconsistency in contract', this.moduleNameValue + '.' + this.nameValue, comp.nameValue)
         }
       }
     }

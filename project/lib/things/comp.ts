@@ -26,7 +26,7 @@ export class Comp extends Namable implements IComp {
   }
 
   index(value: boolean = true) {
-    if (!this.fieldValue) helpers.servant.message(`It\'s impossible to create index from flag component`, `${this.moduledClassNameValue}`)
+    if (!this.fieldValue) helpers.messageRobot.message(`It\'s impossible to create index from flag component`, `${this.moduledClassNameValue}`)
     else this.indexValue = value
     return this
   }
