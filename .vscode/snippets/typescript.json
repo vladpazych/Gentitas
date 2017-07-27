@@ -7,7 +7,7 @@
   "Kernel Index": {
     "prefix": "kernel",
     "body": [
-      "import { kernel, match, initializeContract, executeContract, reactiveContracts, namespace } from '@lib'",
+      "import { kernel, match, initializeContract, executeContract, reactiveContracts, multiReactiveContracts, namespace } from '@lib'",
       "import scomps from './comps_state'",
       "",
       "const logic = new (class {",

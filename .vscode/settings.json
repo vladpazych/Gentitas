@@ -13,13 +13,13 @@
         "package.json": true,
         "gentitas.js": true,
         "README.md": true,
-        ".gitignore": true
+        ".gitignore": true,
 
         // Comment this section to open the hood
-        // "*.*": true,
-        // "project/lib": true,
-        // "project/templates": true,
-        // "project/map.ts": true,
+        "*.*": true,
+        "project/lib": true,
+        "project/templates": true,
+        "project/map.ts": true
     },
     "editor.tabSize": 2,
     "editor.insertSpaces": true,
