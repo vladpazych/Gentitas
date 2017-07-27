@@ -13,11 +13,13 @@ export interface IContract extends INamable {
 
 export class Contract extends Namable implements IContract {
   systemTypeValue: string
+  isContractValue: boolean
   commentValue: string
 
   constructor(name?: string) {
     super(name || '', '', 'Contract')
     this.systemTypeValue = ''
+    this.isContractValue = true
   }
 
   //
@@ -108,13 +110,16 @@ export class ReactiveContract extends ExecuteContract implements IReactiveContra
 
         if (!this.contextValue && !comp.isFakeValue) {
           this.contextValue = (m.combined[i] as Comp).contextValue
+
+          if (this.contextValue && this.moduleNameValue !== this.contextValue.moduleNameValue) {
+            this.isSpyValue = true
+          }
         }
 
-        if (!comp.isFakeValue && comp.contextValue && comp.contextValue.nameValue !== this.contextValue.nameValue) {
-          helpers.messageRobot.message('Context inconsistency in contract', this.moduleNameValue + '.' + this.nameValue, comp.nameValue)
+        if (!comp.isFakeValue && comp.contextValue &&
+          (comp.contextValue.nameValue !== this.contextValue.nameValue || comp.moduleNameValue !== this.contextValue.moduleNameValue)) {
+          helpers.messageRobot.message('Context inconsistency in contract', this.moduledClassNameValue, comp.moduledClassNameValue)
         }
-
-        if (this.contextValue && this.moduleNameValue !== this.contextValue.moduleNameValue) this.isSpyValue = true
       }
     }
   }
@@ -145,7 +150,9 @@ export class MultiReactiveContract extends ExecuteContract implements IMultiReac
             'FakeContext can not be added to MultiReactiveContract',
             'Context: ' + comp.contextValue.classNameValue,
             'Contract: ' + this.classNameValue,
-            'Module: ' + this.moduleNameValue)
+            'Module: ' + this.moduleNameValue,
+            '',
+            'Blocked')
 
           this.block(true)
           break

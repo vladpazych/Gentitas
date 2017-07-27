@@ -9,64 +9,33 @@ using Entitas;
 using UnityEngine;
 using System.Collections.Generic;
 
-{{#each modules}}
-{{#each pointerKernels}}
-namespace {{moduleNameValue}}.Kernels {
-#if UNITY_EDITOR
-	public class {{classNameValue}}: Entitas.VisualDebugging.Unity.DebugSystems {
-#else
-	public class {{classNameValue}}: Systems {
-#endif
-		Contexts contexts;
-
-#if UNITY_EDITOR
-		public {{classNameValue}}() : base("{{nameUpperValue}}") {
-#else
-		public {{classNameValue}}() : base() {
-#endif
-
-			contexts = Contexts.sharedInstance;
-
-			{{#each contractsValue}}
-			{{!--If it is a kernel--}}
-			{{#if isKernelValue}}
-			this.Add(new {{moduleNameValue}}.Kernels.{{classNameValue}}());
-			{{else}}
-			this.Add(new {{moduleNameValue}}.Contracts.{{#if namespaceValue}}{{namespaceValue}}.{{/if}}{{nameUpperValue}}(contexts));
-			{{/if}}
-			{{/each}}
+namespace Gentitas.Lib {
+	#if UNITY_EDITOR
+		public class BaseKernel: Entitas.VisualDebugging.Unity.DebugSystems {
+			public BaseKernel(string name) : base(name) {
+	#else
+		public class BaseKernel: Systems {
+			public BaseKernel(string name) : base() {
+	#endif
+			}
 		}
-	}
 }
-{{/each}}
 
+{{#each modules}}
 {{#each kernels}}
 namespace {{moduleNameValue}}.Kernels {
-#if UNITY_EDITOR
-	public class {{classNameValue}}: Entitas.VisualDebugging.Unity.DebugSystems {
-#else
-	public class {{classNameValue}}: Systems {
-#endif
-		Contexts contexts;
-
-#if UNITY_EDITOR
+	public class {{classNameValue}}: Gentitas.Lib.BaseKernel {
 		public {{classNameValue}}() : base("{{nameUpperValue}}") {
-#else
-		public {{classNameValue}}() : base() {
-#endif
-
-			contexts = Contexts.sharedInstance;
-
 			{{#each contractsValue}}
-			{{!--If it is a kernel--}}
 			{{#if isKernelValue}}
 			this.Add(new {{moduleNameValue}}.Kernels.{{classNameValue}}());
 			{{else}}
-			this.Add(new {{moduleNameValue}}.Contracts.{{#if namespaceValue}}{{namespaceValue}}.{{/if}}{{nameUpperValue}}(contexts));
+			this.Add(new {{moduleNameValue}}.Contracts.{{#if namespaceValue}}{{namespaceValue}}.{{/if}}{{nameUpperValue}}());
 			{{/if}}
 			{{/each}}
 		}
 	}
 }
+
 {{/each}}
 {{/each}}

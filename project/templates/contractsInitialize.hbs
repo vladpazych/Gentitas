@@ -10,9 +10,8 @@ using UnityEngine;
 using System.Collections.Generic;
 
 {{#each modules}}
-namespace {{@key}}.Contracts {
-{{#each initializeContracts}}
-    {{#if namespaceValue}}namespace {{namespaceValue}} { {{/if}}
+namespace {{@key}}.Contracts { {{#each initializeContracts}}{{#if namespaceValue}}
+    namespace {{namespaceValue}} { {{/if}}
         namespace Base {
             public abstract class {{nameUpperValue}}: IInitializeSystem {
                 Contexts contexts;
@@ -21,8 +20,8 @@ namespace {{@key}}.Contracts {
                 protected {{classNameValue}} {{nameValue}};
                 {{/each}}
 
-                public {{nameUpperValue}} (Contexts contexts) : base() { 
-                    this.contexts = contexts;
+                public {{nameUpperValue}} () : base() { 
+                    this.contexts = Contexts.sharedInstance;
 
                     {{#each ../contexts}}
                     {{nameValue}} = contexts.{{nameValue}};
@@ -38,12 +37,10 @@ namespace {{@key}}.Contracts {
         }
 
         public partial class {{nameUpperValue}}: Base.{{nameUpperValue}} {
-            public {{nameUpperValue}} (Contexts contexts) : base(contexts) { }
-        }
-   {{#if namespaceValue}} } {{/if}}
-
+            public {{nameUpperValue}} () : base() { }
+        }{{#if namespaceValue}}
+    } {{/if}}
 {{/each}}
-
 }
 
 {{/each}}

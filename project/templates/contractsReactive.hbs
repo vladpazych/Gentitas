@@ -10,10 +10,8 @@ using UnityEngine;
 using System.Collections.Generic;
 
 {{#each modules}}
-namespace {{@key}}.Contracts {
-{{#each reactiveContracts}}
-    {{#unless isBlockedValue}}
-    {{#if namespaceValue}}namespace {{namespaceValue}} { {{/if}}
+namespace {{@key}}.Contracts { {{#each reactiveContracts}}{{#unless isBlockedValue}}{{#if namespaceValue}}
+    namespace {{namespaceValue}} { {{/if}}
         namespace Base {
             public abstract class {{nameUpperValue}}: ReactiveSystem<{{contextValue.moduleNameValue}}.{{contextValue.nameUpperValue}}Entity> {
                 protected {{contextValue.moduleNameValue}}.{{contextValue.nameUpperValue}}Context context;
@@ -26,9 +24,9 @@ namespace {{@key}}.Contracts {
                 protected {{classNameValue}} {{nameValue}};
                 {{/each}}
 
-                public {{nameUpperValue}} (Contexts contexts) : base({{#if isSpyValue}}{{contextValue.moduleNameValue}}.Contexts.sharedInstance{{else}}contexts{{/if}}.{{contextValue.nameValue}}) {
+                public {{nameUpperValue}} () : base({{#if isSpyValue}}{{contextValue.moduleNameValue}}.Contexts.sharedInstance{{else}}Contexts.sharedInstance{{/if}}.{{contextValue.nameValue}}) {
+                    this.contexts = Contexts.sharedInstance;
                     this.context = {{#if isSpyValue}}spyContexts{{else}}contexts{{/if}}.{{contextValue.nameValue}};
-                    this.contexts = contexts;
 
                     {{#each ../contexts}}
                     {{nameValue}} = contexts.{{nameValue}};
@@ -40,9 +38,9 @@ namespace {{@key}}.Contracts {
                         new IGroup<{{contextValue.moduleNameValue}}.{{contextValue.nameUpperValue}}Entity>[] { 
                             {{#each triggersValue}}
                             context.GetGroup(Matcher<{{../contextValue.moduleNameValue}}.{{../contextValue.nameUpperValue}}Entity>{{#if match.allOf.length}}
-                                .AllOf({{#each match.allOf}}{{moduleNameValue}}.{{../../contextValue.nameUpperValue}}Matcher.{{nameUpperValue}}{{#unless @last}}, {{/unless}}{{/each}}){{/if}}{{#if match.anyOf.length}}
-                                .AnyOf({{#each match.anyOf}}{{moduleNameValue}}.{{../../contextValue.nameUpperValue}}Matcher.{{nameUpperValue}}{{#unless @last}}, {{/unless}}{{/each}}){{/if}}{{#if match.noneOf.length}}
-                                .NoneOf({{#each match.noneOf}}{{moduleNameValue}}.{{../../contextValue.nameUpperValue}}Matcher.{{nameUpperValue}}{{#unless @last}}, {{/unless}}{{/each}}){{/if}}){{#unless @last}},{{/unless}}
+                                .AllOf({{#each match.allOf}}{{../../contextValue.moduleNameValue}}.{{../../contextValue.nameUpperValue}}Matcher.{{nameUpperValue}}{{#unless @last}}, {{/unless}}{{/each}}){{/if}}{{#if match.anyOf.length}}
+                                .AnyOf({{#each match.anyOf}}{{../../contextValue.moduleNameValue}}.{{../../contextValue.nameUpperValue}}Matcher.{{nameUpperValue}}{{#unless @last}}, {{/unless}}{{/each}}){{/if}}{{#if match.noneOf.length}}
+                                .NoneOf({{#each match.noneOf}}{{../../contextValue.moduleNameValue}}.{{../../contextValue.nameUpperValue}}Matcher.{{nameUpperValue}}{{#unless @last}}, {{/unless}}{{/each}}){{/if}}){{#unless @last}},{{/unless}}
                             {{/each}}
                         },
                         new GroupEvent[] { 
@@ -66,13 +64,10 @@ namespace {{@key}}.Contracts {
         }
 
         public partial class {{nameUpperValue}}: Base.{{nameUpperValue}} {
-            public {{nameUpperValue}} (Contexts contexts) : base(contexts) { }
-        }
-    {{#if namespaceValue}} } {{/if}}
-    {{/unless}}
-    
+            public {{nameUpperValue}} () : base() { }
+        }{{#if namespaceValue}}
+    } {{/if}}{{/unless}}
 {{/each}}
-
 }
 
 {{/each}}

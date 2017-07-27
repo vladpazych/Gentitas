@@ -1,6 +1,6 @@
 import map from '../../map'
 import * as helpers from '../helpers/common'
-import { IContract } from './contracts'
+import { IContract, Contract } from './contracts'
 import { INamable, Namable } from './namable'
 
 export interface IBaseKernel extends INamable {
@@ -18,6 +18,10 @@ export class BaseKernel extends Namable implements IBaseKernel {
   }
 
   add(kernelOrContract: {}) {
+    if (!(kernelOrContract as BaseKernel).isKernelValue && !(kernelOrContract as Contract).isContractValue) {
+      helpers.messageRobot.message('Only kernel or contract can be added to kernel', this.moduledClassNameValue)
+    }
+
     this.contractsValue.push(kernelOrContract)
 
     return this
