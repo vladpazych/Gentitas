@@ -11,7 +11,9 @@ const logic = namespace('Cool', new (class {
     .enter(match.all(event.event, other.contexts.state.application))
 
   multis = multiReactiveContract(state, input)
-    .enter(match.all(event.event, other.contexts.state.application))
+    .enter(match.all(event.event, event.index))
+    .left(match.all(event.event, event.index))
+    .enter(match.all(event.event, event.processed))
 
 })())
 
