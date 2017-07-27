@@ -15,11 +15,11 @@ namespace {{@key}}.Contracts {
     {{#unless isBlockedValue}}
     {{#if namespaceValue}}namespace {{namespaceValue}} { {{/if}}
         namespace Base {
-            public abstract class {{nameUpperValue}}: MultiReactiveSystem<IEntity, Contexts> {
-                public {{nameUpperValue}}(Contexts contexts) : base(contexts) {
+            public abstract class {{nameUpperValue}}: MultiReactiveSystem<{{fakeContextValue.entityInterfaceValue}}, Contexts> {
+                public {{nameUpperValue}}() : base(Contexts.sharedInstance) {
                 }
 
-                protected override ICollector[] GetTrigger(Contexts contexts) {
+                protected sealed override ICollector[] GetTrigger(Contexts contexts) {
                     return new ICollector[] {
                         {{#each contextsValue}}
                         {{#each ../triggersValue}}
@@ -31,20 +31,20 @@ namespace {{@key}}.Contracts {
                     };
                 }
 
-                protected override bool Filter(IEntity entity) {
+                protected override bool Filter({{fakeContextValue.entityInterfaceValue}} entity) {
                     return true;
                 }
 
-                protected override void Execute(List<IEntity> entities) { Act(entities); }
+                protected sealed override void Execute(List<{{fakeContextValue.entityInterfaceValue}}> entities) { Act(entities); }
 
-                protected virtual void Act (List<IEntity> entities) {
+                protected virtual void Act (List<{{fakeContextValue.entityInterfaceValue}}> entities) {
                     Debug.Log("Not implemented contract: {{moduleNameValue}}.{{nameUpperValue}}");
                 }
             }
         }
 
         public partial class {{nameUpperValue}}: Base.{{nameUpperValue}} {
-            public {{nameUpperValue}} (Contexts contexts) : base(contexts) { }
+            public {{nameUpperValue}} () : base() { }
         }
     {{#if namespaceValue}} } {{/if}}
     {{/unless}}

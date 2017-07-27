@@ -2,15 +2,16 @@ import { module, kernel, match, initializeContract, executeContract, reactiveCon
 import $this from './alias'
 import { state, input, event } from './contexts'
 import other from '../Other'
+import partial from '../Partial'
 
 
-const logic = namespace('Cool', new (class {
+const logic = namespace('General', new (class {
   init = initializeContract()
 
   eventProcess = reactiveContract()
     .enter(match.all(event.event, other.contexts.state.application))
 
-  multis = multiReactiveContract(state, input)
+  multis = multiReactiveContract(state, input, other.contexts.state)
     .enter(match.all(event.event, event.index))
     .left(match.all(event.event, event.index))
     .enter(match.all(event.event, event.processed))

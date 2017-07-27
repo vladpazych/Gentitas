@@ -126,6 +126,10 @@ export class ReactiveContract extends ExecuteContract implements IReactiveContra
 }
 
 
+
+//
+// MultiReactive
+//
 export interface IMultiReactiveContract extends IExecuteContract {
   enter(match: IMatch): this
   left(match: IMatch): this
@@ -133,7 +137,8 @@ export interface IMultiReactiveContract extends IExecuteContract {
 
 export class MultiReactiveContract extends ExecuteContract implements IMultiReactiveContract {
   contextsValue: IContext[] = []
-  triggersValue: Array<{ match: IMatch, context: IContext, eventType: string }> = []
+  fakeContextValue: IContext
+  triggersValue: Array<{ match: IMatch, eventType: string }> = []
 
   constructor(contexts: Array<{}>, name?: string) {
     super(name)
@@ -148,7 +153,7 @@ export class MultiReactiveContract extends ExecuteContract implements IMultiReac
         if (this.contextsValue.indexOf(comp.contextValue) === -1) this.contextsValue.push(comp.contextValue)
         if (comp.isCompValue && comp.isFakeValue) {
           helpers.messageRobot.message(
-            'FakeContext can not be added to MultiReactiveContract',
+            'FakeContext can not be added to ' + this.systemTypeValue + 'Contract',
             'Context: ' + comp.contextValue.classNameValue,
             'Contract: ' + this.classNameValue,
             'Module: ' + this.moduleNameValue,
@@ -166,8 +171,6 @@ export class MultiReactiveContract extends ExecuteContract implements IMultiReac
   // Trigger
   //
   private trigger(match: IMatch, eventType: string) {
-    let context: IContext
-
     let allTriggerComps = (match as Match).combined
     for (let namable of allTriggerComps) {
       let comp = (namable as Comp)
@@ -177,12 +180,12 @@ export class MultiReactiveContract extends ExecuteContract implements IMultiReac
           comp.moduledClassNameValue)
 
         this.block(true)
+      } else {
+        this.fakeContextValue = comp.contextValue
       }
-
-      context = comp.contextValue
     }
 
-    this.triggersValue.push({ match, context, eventType })
+    this.triggersValue.push({ match, eventType })
 
     return this
   }
@@ -194,6 +197,66 @@ export class MultiReactiveContract extends ExecuteContract implements IMultiReac
 
   left(match: IMatch) {
     this.trigger(match, EventType.onLeft)
+    return this
+  }
+}
+
+
+
+//
+// FakeReactive
+//
+export interface IFakeReactiveContract extends IExecuteContract {
+  enter(match: IMatch): this
+  left(match: IMatch): this
+}
+
+export class FakeReactiveContract extends ExecuteContract implements IFakeReactiveContract {
+  triggersValue: Array<{ match: IMatch, eventType: string }> = []
+  implementationContextsValue: IContext[] = []
+  isFakeReactiveContract: boolean = true
+
+  constructor(name?: string) {
+    super(name)
+    this.systemTypeValue = 'FakeReactive'
+  }
+
+  //
+  // Trigger
+  //
+  private trigger(match: IMatch, eventType: string) {
+    let allTriggerComps = (match as Match).combined
+    for (let namable of allTriggerComps) {
+      let comp = (namable as Comp)
+      if (!comp.isFakeValue) {
+        helpers.messageRobot.message(this.systemTypeValue + 'Contract can not have component from non-fake context',
+          this.moduledClassNameValue,
+          comp.moduledClassNameValue)
+
+        this.block(true)
+      }
+    }
+
+    this.triggersValue.push({ match, eventType })
+
+    return this
+  }
+
+  enter(match: IMatch) {
+    this.trigger(match, EventType.onEntered)
+    return this
+  }
+
+  left(match: IMatch) {
+    this.trigger(match, EventType.onLeft)
+    return this
+  }
+
+  implement(context: {}) {
+    let keys = Object.keys(context)
+    let ctx = context[keys[0]].contextValue
+
+    if (this.implementationContextsValue.indexOf(ctx) === -1) this.implementationContextsValue.push(ctx)
     return this
   }
 }
@@ -224,6 +287,13 @@ export function reactiveContract(): IReactiveContract {
 export function multiReactiveContract(context: {}, ...contexts: Array<{}>): IMultiReactiveContract {
   let el = new MultiReactiveContract([context, ...contexts])
   map.AddModule(el.moduleNameValue, 'multiReactiveContracts', el, false)
+  map.AddModule(el.moduleNameValue, 'contracts', el, false)
+  return el
+}
+
+export function fakeReactiveContract(): IMultiReactiveContract {
+  let el = new FakeReactiveContract()
+  map.AddModule(el.moduleNameValue, 'fakeReactiveContracts', el, false)
   map.AddModule(el.moduleNameValue, 'contracts', el, false)
   return el
 }
