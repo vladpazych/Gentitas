@@ -1,13 +1,13 @@
 # Gentitas - Code Generator for Entitas
 
-Gentitas is a fast code generator for Entitas. It watches your `Assets` fikder for `.gentitas.cs` files and generates Entitas API from them.
+Gentitas is a fast code generator for Entitas. It watches your `Assets` folder for `.gentitas.cs` files and generates Entitas API from them.
 
 ---
 
 ### **[» Download](#download-gentitas)**
-### **[» Install and run][wiki-install]**
-### **[» Ask a question / Report a bug][issues-new]**
-### **[» Wiki and examples][wiki]**
+### **[» Install and run](https://github.com/vladpazych/Gentitas/wiki/Install-and-run)**
+### **[» Ask a question / Report a bug](https://github.com/vladpazych/Gentitas/issues/new)**
+### **[» Wiki and examples](https://github.com/vladpazych/Gentitas/wiki)**
 ### **[» Go to Entitas repository](https://github.com/sschmid/Entitas-CSharp)**
 
 ---
@@ -60,7 +60,7 @@ void Example ()
 
 How to use
 ==========
-- Download `.zip` release, unpack it in your `Assets` folder and run `Generator.exe`.
+- Download `.zip` framework and generator, unpack it in your `Assets` folder, put generator folder into framewrok, and run `Generator.exe`.
 
 or
 - Download sources (this repository) and put it in root of your project (same level as `Assets` folder), and [follow instructions](#how-to-run-and-build-from-source).
@@ -103,4 +103,4 @@ Download Gentitas
 =================
 Each release contains framework code and generator executable.
 
-[Show releases][releases]
+[Show releases](https://github.com/vladpazych/Gentitas/releases)
