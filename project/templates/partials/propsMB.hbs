@@ -1,8 +1,0 @@
-{{#each propsMB}}
-{{this.type}} _{{toLower this.name}};
-protected {{this.type}} {{toLower this.name}} {get {
-    if (_{{toLower this.name}} == null) {
-        _{{toLower this.name}} = GetComponent<{{this.type}}>(); }
-    return _{{toLower this.name}}; } }
-    
-{{/each}}
