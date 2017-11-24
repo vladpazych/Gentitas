@@ -1,126 +1,106 @@
 # Gentitas - Code Generator for Entitas
 
-Gentitas is a fast and easy to extend code generator, that takes data created by your TypeScript code, and generates C# API source code and API Reference Documentation as static HTML. 
+Gentitas is a fast code generator for Entitas. It watches your `Assets` fikder for `.gentitas.cs` files and generates Entitas API from them.
 
 ---
 
 ### **[» Download](#download-gentitas)**
 ### **[» Install and run][wiki-install]**
-### **[» Ask a question][issues-new]**
+### **[» Ask a question / Report a bug][issues-new]**
 ### **[» Wiki and examples][wiki]**
-### **[» Go to Entitas](https://github.com/sschmid/Entitas-CSharp)**
+### **[» Go to Entitas repository](https://github.com/sschmid/Entitas-CSharp)**
 
 ---
 
 First glimpse
 =============
-```typescript
-// Components
-application = ucomponent()
-processed = component()
-action = component({
-    value: alias.string
-}).Contexts(contexts.meta)
-
-// Systems
-processActionEntity = reactiveSystem(contexts.meta)
-    .Trigger(Matcher.AllOf(components.action), EventType.onEntered)
-    .Trigger(Matcher.AllOf(components.action).NoneOf(components.resolved), EventType.onEntered)
-    .Ensure(components.action)
-    .Exclude(components.resolved)
-
-// Views
-someElement = view()
-    .PropEntity(contexts.core, classesCommon.someOtherService.GetComponent())
-    .PropGO('Body', 'body')
-    .PropMB(alias.mb.animator)
-    .PropMBExternal(alias.mb.animator, "Body/Common", "commonAnimator")
-    .PropContext(contexts.core)
-    .Method("Rotate", alias.void, { direction: alias.int })
-    .MethodEditor("RotateLeft")
-    .MethodEditor("RotateRight")
-    .Ucomponent()
-```
-
 ```csharp
-// To implement system:
-public partial class ProcessActionEntitySystem {
-	protected override void Act(MetaEntity entity) 	{
-		entity.isProcessed = true;
-	}
+// Declaration
+namespace Game.YourModule.Declaration
+{
+    public class State : Context
+    {
+        State()
+        {
+            var Application = Component().GroupSingle;
+            var RabbitName = Component<string>().Index;
+            var Rabbit = Component();
+            var RabbitUnit = Component<RabbitUnit>().GroupSingle;
+            var Fast = Component();
+            var Speed = Component<float>().Group;
+
+            var RabbitWithName = Group(Match.All(Sceme, RabbitName));
+            var FastRabbitName = Index(RabbitName, Rabbit, Fast);
+        }
+    }
 }
 
-// To implement view:
-public class SomeElementView : BaseSomeElementView {
-    void Start () {
-        // Add reference to this view:
-        coreContext.createEntity().AddSomeElementView(this); // Ucomponent is already generated
-        
-        // SomeElementViewComponent has ISomeElementView as value
-        // ISomeElementView has all methods declared in generator
-    }
+// Usage
+void Example ()
+{
+    // Components
+    var entity = Contexts.state.CreateComponent();
+    entity.rabbitName = "Steve";
+    entity.rabbit = true;
+    entity.fast = truel
+    entity.speed = 10f;
 
-    public override void Rotate(int direction) {
-        animator.SetInt("Direction", direction); // Generated property 'animator'
-        coreSomeOtherService.value.DoSomething(); // Generated property 'coreSomeOtherService'
-    }
+    // Groups
+    var application = Contexts.state.applicationEntity;
+    var speedGroup = Contexts.state.speedGroup;
+    var speedEntities = Contexts.state.speedEntities;
+    var rabbitUnit Contexts.state.rabbitUnit;
 
-    // Editor methods will available as buttons in generated custom inspector:
-    public override void RotateLeftTest() {
-        Rotate(3)
-	}
-    
-    public override void RotateRightTest() {
-        Rotate(1)
-	}
+    // Index
+    Contexts.state.fastRabbitNameIndex.GetCount("Steve");
+    Contexts.state.fastRabbitNameIndex.Find("Steve");
+    Contexts.state.fastRabbitNameIndex.FindSingle("Steve");
 }
 ```
 
+How to use
+==========
+- Download `.zip` release, unpack it in your `Assets` folder and run `Generator.exe`.
 
-Overview
-========
-You can declare all interfaces, classes, properties, methods inside Gentitas, and only implement logic in C#.
+or
+- Download sources (this repository) and put it in root of your project (same level as `Assets` folder), and [follow instructions](#how-to-run-and-build-from-source).
 
-Or you can use it for only ECS components and contexts.
+Current limitations
+===================
+- Prebuilt releases tested only on Windows 10. If you want to use it on macOS or Linux, please use source version, or build from source yourself.
+- Framework can't automaticly download updates.
+- Framewrok can't automaticly download generator.
 
-You can easily extend handlebars templates to add some sugar in your API.
+How to run and build from source
+======================
+`Gentitas.exe` size is too big to be included in your git repo, so it might be good idea to keep sources in your project, so you can rebuild any time.
 
-Out of the box it can generate:
-- Contexts
-- Components
-- SystemChains
-- Interfaces
+If you have built version and source version, keep in mind that they use different instances of config and templates. When you build whole framework, source version of templates and config will be written in your Assets folder for built generator to use.
 
-Bases or partials:
-- Systems
-- Classes
-- Views
+### To work with sources
+You need to have  [Node.js](https://nodejs.org/) installed.
+```
+cd [pathToYourProject]/Gentitas
+npm install
+```
 
-[Read more...][wiki]
+### To run generator from source
+```
+npm start
+```
+
+### To build only generator (if you already have framework):
+```
+npm run build
+```
+### To build whole gentitas framework with configs:
+```
+npm run build-gentitas-into-project
+```
 
 
 Download Gentitas
 =================
-Each release is published with zip files containing all source files you need.
+Each release contains framework code and generator executable.
 
 [Show releases][releases]
-
-
-Contribute
-==========
-The project is hosted on [GitHub][repo] where you can [report issues][issues-new], fork the project and [submit pull requests][pulls].
-
-Feel free to [suggest your ideas][issues-new].
-
-
-Maintainer
-==========
-* [@vladpazych](https://github.com/vladpazych)
-
-
-[issues-new]: https://github.com/vladpazych/Gentitas/issues/new "New issue"
-[wiki]: https://github.com/vladpazych/Gentitas/wiki "Entitas Wiki"
-[wiki-install]: https://github.com/vladpazych/Gentitas/wiki/Install-and-run "Install and run"
-[releases]: https://github.com/vladpazych/Gentitas/releases "Releases"
-[repo]: https://github.com/vladpazych/Gentitas "Repository"
-[pulls]: https://github.com/vladpazych/Gentitas/pulls "New pull request"

@@ -1,30 +1,35 @@
 {
   "name": "gentitas",
-  "version": "1.0.1",
+  "version": "0.0.0",
+  "description": "",
+  "main": "Generator/Generator.js",
+  "scripts": {
+    "start": "nodemon ./Generator/Generator.js",
+    "build-gentitas": "gulp4 build-gentitas-release",
+    "build-gentitas-into-project": "gulp4 build-gentitas-release-into-project",
+    "build": "gulp4 build-generator"
+  },
   "repository": {
     "type": "git",
-    "url": "git@github.com:vladpazych/Gentitas.git"
+    "url": "git+https://gitlab.com/vladpazych/gentitas.git"
   },
-  "description": "Gentitas is a fast and powerful code generator for Entitas projects in Unity3D",
-  "main": "main.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "gulp --gulpfile gentitas.js"
+  "author": "Vladislav Pazych <vladpazych@gmail.com> (https://github.com/vladpazych)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/vladpazych/gentitas/issues"
   },
-  "author": "Vladislav Pazych",
-  "license": "MIT",
-  "dependencies": {
-    "@types/node": "^7.0.0",
-    "fs-extra": "^2.0.0",
-    "gulp": "github:gulpjs/gulp#4.0",
+  "homepage": "https://gitlab.com/vladpazych/gentitas#README",
+  "devDependencies": {
+    "fs": "0.0.1-security",
+    "fs-extra": "^4.0.2",
+    "fs-walk": "0.0.1",
     "gulp-clean": "^0.3.2",
-    "gulp-typescript": "^3.1.4",
-    "gulp-watch": "^4.3.11",
-    "handlebars": "^4.0.6",
-    "prettified": "0.0.7",
-    "promise": "^7.1.1",
-    "stack-trace": "0.0.9",
-    "typescript": "^2.1.4"
-  },
-  "devDependencies": {}
+    "gulp-zip": "^4.0.0",
+    "gulp4": "^4.0.2",
+    "handlebars": "^4.0.11",
+    "nexe": "^2.0.0-rc.20",
+    "node-watch": "^0.5.5",
+    "nodemon": "^1.12.1",
+    "prettified": "0.0.7"
+  }
 }

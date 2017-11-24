@@ -1,0 +1,15 @@
+{
+    "outputDirectory": "../../Assets/Generated",
+    "scanDirectory": "../../Assets",
+    "files": {
+        "./Contexts.cs": "../Templates/Contexts.hbs",
+        "./Components.cs": "../Templates/Components.hbs",
+        "./Entities.cs": "../Templates/Entities.hbs",
+        "./Groups.cs": "../Templates/Groups.hbs",
+        "./Indexes.cs": "../Templates/Indexes.hbs",
+        "./Matchers.cs": "../Templates/Matchers.hbs",
+        "./DevTools.cs": "../Templates/DevTools.hbs",
+        "./Systems.cs": "../Templates/Systems.hbs"
+    },
+    "partials": {}
+}
