@@ -60,7 +60,7 @@ void Example ()
 
 How to use
 ==========
-- Download `.zip` framework and generator, unpack it in your `Assets` folder, put generator folder into framewrok, and run `Generator.exe`.
+- [Download](https://github.com/vladpazych/Gentitas/releases) `.zip` framework and generator, unpack it in your `Assets` folder, put generator folder into framewrok, and run `Generator.exe`.
 
 or
 - Download sources (this repository) and put it in root of your project (same level as `Assets` folder), and [follow instructions](#how-to-run-and-build-from-source).
