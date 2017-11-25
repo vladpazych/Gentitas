@@ -1,6 +1,4 @@
 {
-    "outputDirectory": "../../Assets/Generated",
-    "scanDirectory": "../../Assets",
     "files": {
         "./Contexts.cs": "../Templates/Contexts.hbs",
         "./Components.cs": "../Templates/Components.hbs",

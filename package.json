@@ -1,24 +1,25 @@
 {
   "name": "gentitas",
   "version": "0.0.0",
-  "description": "",
-  "main": "Generator/Generator.js",
+  "description": "Gentitas is ",
+  "main": "generator.js",
   "scripts": {
-    "start": "nodemon ./Generator/Generator.js",
-    "build-gentitas": "gulp4 build-gentitas-release",
-    "build-gentitas-into-project": "gulp4 build-gentitas-release-into-project",
-    "build": "gulp4 build-generator"
+    "start": "node ./generator.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/vladpazych/gentitas.git"
+    "url": "git+https://github.com/vladpazych/Gentitas.git"
   },
+  "keywords": [
+    "gentitas"
+  ],
   "author": "Vladislav Pazych <vladpazych@gmail.com> (https://github.com/vladpazych)",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
-    "url": "https://gitlab.com/vladpazych/gentitas/issues"
+    "url": "https://github.com/vladpazych/Gentitas/issues"
   },
-  "homepage": "https://gitlab.com/vladpazych/gentitas#README",
+  "homepage": "https://github.com/vladpazych/Gentitas#readme",
+  "dependencies": {},
   "devDependencies": {
     "fs": "0.0.1-security",
     "fs-extra": "^4.0.2",
@@ -29,7 +30,6 @@
     "handlebars": "^4.0.11",
     "nexe": "^2.0.0-rc.20",
     "node-watch": "^0.5.5",
-    "nodemon": "^1.12.1",
     "prettified": "0.0.7"
   }
 }

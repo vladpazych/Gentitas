@@ -18,6 +18,7 @@ namespace {{@key}}.Indexes {
             {{toUpper ../name}}Entity FindSingle({{type}} value);
             /// Value: {{valueComponentName}} {{#if flagComponentNames}}| Flags:{{/if}} {{#each flagComponentNames}}{{toUpper this}}{{/each}}
             HashSet<{{toUpper ../name}}Entity> Find({{type}} value);
+            int GetCount({{type}} value);
         }
 
         public class {{toUpper name}}Index : Gentitas.Index<{{type}}, {{toUpper ../name}}Entity>, I{{toUpper name}}Index
@@ -26,7 +27,7 @@ namespace {{@key}}.Indexes {
 
             public {{toUpper name}}Index(StateContext context) : base()
             {
-                groupToWatch = context.GetGroup(Matcher<{{toUpper ../name}}Entity>.AllOf({{toUpper ../name}}Matcher.{{valueComponentName}}{{#each flagComponentNames}}, {{toUpper ../../name}}Matcher.{{this}}{{/each}}));
+                groupToWatch = context.GetGroup(Matcher<{{toUpper ../name}}Entity>.AllOf({{toUpper ../name}}Matcher.{{toUpper valueComponentName}}{{#each flagComponentNames}}, {{toUpper ../../name}}Matcher.{{this}}{{/each}}));
                 groupToWatch.OnEntityAdded += Added;
                 groupToWatch.OnEntityUpdated += Updated;
                 groupToWatch.OnEntityRemoved += Removed;
@@ -81,7 +82,7 @@ namespace {{@key}}.Indexes {
 
             void Updated(IGroup<{{toUpper ../name}}Entity> group, {{toUpper ../name}}Entity entity, int index, IComponent previousComponent, IComponent component)
             {
-                HandleEntity(entity, ((Components.{{toUpper ../name}}.{{toUpper valueComponentName}})previousComponent).value);
+                HandleEntity(entity, ((Components.{{toUpper ../name}}.{{toUpper name}})previousComponent).value);
             }
 
             void Removed(IGroup<{{toUpper ../name}}Entity> group, {{toUpper ../name}}Entity entity, int index, IComponent component)
@@ -99,6 +100,12 @@ namespace {{@key}}.Indexes {
             {
                 if (!lookup.ContainsKey(value)) return null;
                 return lookup[value];
+            }
+
+            public int GetCount({{type}} value)
+            {
+                if (!lookup.ContainsKey(value)) return 0;
+                return lookup[value].Count;
             }
         }
 		{{/each}}
