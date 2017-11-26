@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 {{#each this}}
 namespace {{@key}}.Systems {
-	public abstract class InitializeSystem : Gentitas.InitializeSystem {
+	public abstract class InitializeSystem : Entitas.Gentitas.Systems.InitializeSystem {
 		{{#each contexts}}
 		{{#unless settings.isPartial}}
 		protected {{toUpper @key}}Context {{toLower @key}} { get { return Contexts.{{toLower @key}}; } }
@@ -28,7 +28,7 @@ namespace {{@key}}.Systems {
 		}
 	}
 
-	public abstract class ExecuteSystem : Gentitas.ExecuteSystem {
+	public abstract class ExecuteSystem : Entitas.Gentitas.Systems.ExecuteSystem {
 		{{#each contexts}}
 		{{#unless settings.isPartial}}
 		protected {{toUpper @key}}Context {{toLower @key}} { get { return Contexts.{{toLower @key}}; } }
@@ -46,7 +46,7 @@ namespace {{@key}}.Systems {
 	}
 
 	{{#each contexts}}
-	public abstract class {{toUpper @key}}ReactiveSystem : Gentitas.ReactiveSystem<{{toUpper @key}}Entity> {
+	public abstract class {{toUpper @key}}ReactiveSystem : Entitas.Gentitas.Systems.ReactiveSystem<{{toUpper @key}}Entity> {
 		{{#each ../contexts}}
 		protected {{toUpper @key}}Context {{toLower @key}} { get { return Contexts.{{toLower @key}}; } }
 		{{/each}}
@@ -60,7 +60,7 @@ namespace {{@key}}.Systems {
 	}
 	{{/each}}
 
-	public abstract class MultiReactiveSystem<TEntity> : Gentitas.MultiReactiveSystem<TEntity, Contexts>
+	public abstract class MultiReactiveSystem<TEntity> : Entitas.Gentitas.Systems.MultiReactiveSystem<TEntity, Contexts>
 		where TEntity : class, IEntity
 	{
 		{{#each contexts}}

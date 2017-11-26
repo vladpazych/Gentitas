@@ -12,20 +12,18 @@ using System.Collections.Generic;
 namespace {{@key}}.Components {
     {{#each contexts}}
     namespace {{toUpper name}} {
-        // Flags
+        {{#if flagComponents}}
+        // Flag Components
         {{#each flagComponents}}
         public partial class {{toUpper name}}: Entitas.IComponent { }
         {{/each}}
-         
-        // Value
+        {{/if}}
+        {{#if valueComponents}}
+        // Value Components
         {{#each valueComponents}}
         public partial class {{toUpper name}}: Entitas.IComponent { public {{type}} value; }
         {{/each}}
-
-        // Fake
-        {{#each fakeComponents}}
-        public partial class {{toUpper name}}: Entitas.IComponent { {{#if type}}public {{type}} value;{{/if}} }
-        {{/each}}
+        {{/if}}
     }
     {{/each}}
 }

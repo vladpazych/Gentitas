@@ -21,7 +21,7 @@ namespace {{@key}}.Indexes {
             int GetCount({{type}} value);
         }
 
-        public class {{toUpper name}}Index : Gentitas.Index<{{type}}, {{toUpper ../name}}Entity>, I{{toUpper name}}Index
+        public class {{toUpper name}}Index : Entitas.Gentitas.Index<{{type}}, {{toUpper ../name}}Entity>, I{{toUpper name}}Index
         {
             IGroup<{{toUpper ../name}}Entity> groupToWatch;
 
@@ -82,7 +82,7 @@ namespace {{@key}}.Indexes {
 
             void Updated(IGroup<{{toUpper ../name}}Entity> group, {{toUpper ../name}}Entity entity, int index, IComponent previousComponent, IComponent component)
             {
-                HandleEntity(entity, ((Components.{{toUpper ../name}}.{{toUpper name}})previousComponent).value);
+                HandleEntity(entity, ((Components.{{toUpper ../name}}.{{toUpper valueComponentName}})previousComponent).value);
             }
 
             void Removed(IGroup<{{toUpper ../name}}Entity> group, {{toUpper ../name}}Entity entity, int index, IComponent component)

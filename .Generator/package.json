@@ -30,6 +30,7 @@
     "handlebars": "^4.0.11",
     "nexe": "^2.0.0-rc.20",
     "node-watch": "^0.5.5",
-    "prettified": "0.0.7"
+    "prettified": "0.0.7",
+    "properties-reader": "0.0.16"
   }
 }

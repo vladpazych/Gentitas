@@ -5,8 +5,8 @@ namespace Entitas.Gentitas.Editor
 {
     public class GentitasConfig : AbstractConfigurableConfig
     {
-        const string ENABLE_PING_CSPROJ = "Gentitas.EnablePingCSPorj";
-        const string OUTPUT_PATH_FOLDER_PATH_KEY = "Gentitas.OutputPath";
+        const string ENABLE_PING_CSPROJ = "Entitas.Gentitas.EnablePingCSPorj";
+        const string OUTPUT_PATH_FOLDER_PATH_KEY = "Entitas.Gentitas.OutputPath";
 
         public override Dictionary<string, string> defaultProperties
         {

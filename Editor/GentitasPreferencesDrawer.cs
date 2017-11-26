@@ -71,6 +71,12 @@ namespace Entitas.Gentitas.Editor
                     Debug.LogError("Path does not contain 'Assets'!\nOutput path must be in 'Assets' folder.");
                     return;
                 }
+
+                if (!path.Contains("Generated"))
+                {
+                    Debug.LogError("Path does not contain 'Generated'!\nOutput path must be in 'Generated' folder.");
+                    assetsPath = "Assets/Generated";
+                }
                 _gentitasConfig.outputFolderPath = assetsPath;
             }
         }
