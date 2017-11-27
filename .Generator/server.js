@@ -18,7 +18,7 @@ require('./lib/extensions/string')
 // 
 var USER_PROPERTIES_FILENAME = 'User.properties'
 var ENTITAS_PROPERTIES_FILENAME = 'Entitas.properties'
-var ENABLE_PING_CSPROJ = "Entitas.Gentitas.EnablePingCSPorj";
+var ENABLE_PING_CSPROJ = "Entitas.Gentitas.EnablePingCSProj";
 var OUTPUT_PATH_FOLDER_PATH_KEY = "Entitas.Gentitas.OutputPath";
 
 //
@@ -27,17 +27,31 @@ var OUTPUT_PATH_FOLDER_PATH_KEY = "Entitas.Gentitas.OutputPath";
 var rootGeneratorDir = path.resolve(__dirname)
 var rootProjectDir = getRootProjectDirectory(rootGeneratorDir)
 
+fse.ensureFileSync(path.resolve(rootProjectDir, ENTITAS_PROPERTIES_FILENAME))
+fse.ensureFileSync(path.resolve(rootProjectDir, USER_PROPERTIES_FILENAME))
+
 var properties = propertiesReader(path.resolve(rootProjectDir, ENTITAS_PROPERTIES_FILENAME))
 var userProperties = propertiesReader(path.resolve(rootProjectDir, USER_PROPERTIES_FILENAME))
 
 if (!properties || !userProperties) { throw 'Properties not found. Can\'t generate without properties. [' + path.resolve(rootProjectDir) + ']' }
 
-var outputDirectory = path.join(rootProjectDir, properties.get(OUTPUT_PATH_FOLDER_PATH_KEY))
+var outputDirectoryFromProperties = properties.get(OUTPUT_PATH_FOLDER_PATH_KEY)
+var pingcsprojFromProperties = userProperties.get(ENABLE_PING_CSPROJ) == 'True'
+
+if (!outputDirectoryFromProperties) {
+    outputDirectoryFromProperties = "Assets/Generated"
+    generator.log.warning(OUTPUT_PATH_FOLDER_PATH_KEY + ' not set in Entitas.properties. Using default: ' + outputDirectoryFromProperties)
+}
+
+if (pingcsprojFromProperties == false) {
+    pingcsprojFromProperties = "True"
+    generator.log.warning(ENABLE_PING_CSPROJ + ' not set in Entitas.properties. Using default: ' + pingcsprojFromProperties)
+}
+
+var outputDirectory = path.join(rootProjectDir, outputDirectoryFromProperties)
 var scanDirectory = rootProjectDir
 var csprojDirectory = rootProjectDir
-var pingcsproj = userProperties.get(ENABLE_PING_CSPROJ) == 'True'
-
-console.log(outputDirectory)
+var pingcsproj = pingcsprojFromProperties
 
 generator.log.info('Will generate into ' + outputDirectory)
 generator.log.info('Will look for \'.gentitas.cs\' in ' + scanDirectory)
