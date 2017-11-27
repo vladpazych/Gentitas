@@ -1,6 +1,6 @@
 #!/bin/sh
 BASEDIR=$(dirname "$0")
-cd "$BASEDIR"/../.Generator
+cd "$BASEDIR"/../../.Generator
 echo "Installing Gentitas Dependencies..."
 echo "If you have a slow internet connection, this may take a while."
 echo ""

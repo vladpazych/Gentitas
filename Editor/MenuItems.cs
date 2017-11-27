@@ -16,7 +16,7 @@ namespace Entitas.Gentitas.Editor
             }
         }
 
-         [MenuItem("Tools/Entitas/Check System for Gentitas", false, 602)]
+        [MenuItem("Tools/Entitas/Check System for Gentitas", false, 602)]
         public static void CheckSystem()
         {
             RunShellScript("CheckSystem");
@@ -39,9 +39,21 @@ namespace Entitas.Gentitas.Editor
         {
             var path = Application.dataPath;
             path = Path.GetFullPath(Path.Combine(path, "Plugins/Gentitas/Scripts"));
+            string extname;
+
+            if (SystemInfo.operatingSystemFamily == OperatingSystemFamily.Windows)
+            {
+                path = Path.Combine(path, "cmd");
+                extname = ".cmd";
+            }
+            else
+            {
+                path = Path.Combine(path, "sh");
+                extname = ".sh";
+            }
 
             Process proc = new Process();
-            proc.StartInfo.FileName = command + ".sh";
+            proc.StartInfo.FileName = command + extname;
             proc.StartInfo.WorkingDirectory = path;
             proc.StartInfo.CreateNoWindow = false;
             proc.StartInfo.UseShellExecute = true;
