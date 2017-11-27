@@ -8,7 +8,7 @@ var getAllFiles = require('./getAllFiles')
 var log = require('./log')
 var pingcsproj = require('./pingcsproj')
 var reportTime = require('./reportTime')
-var templatesConfig = require('./templates.json')
+var templatesConfig = require('../../templates.json')
 
 var OUTPUT_SAFE_WORD = 'Generated'
 

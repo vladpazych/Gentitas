@@ -26,8 +26,12 @@ namespace {{@key}} {
 
 		public {{toUpper @../key}}Entity {{toLower @key}}Entity {
 			get { 
-				if ({{toLower @key}}Group.count > 1) throw new System.Exception("{{toUpper @../key}}Context has more than 1 entity with component '{{toUpper @key}}'. You can check safely with 'Has{{toUpper @key}}()'");
-				if ({{toLower @key}}Group.count == 0) throw new System.Exception("{{toUpper @../key}}Context does not have any entity with component '{{toUpper @key}}'. You can check safely with 'Has{{toUpper @key}}()'");
+				if ({{toLower @key}}Group.count > 1) {
+					return null;
+				}
+				if ({{toLower @key}}Group.count == 0) {
+					return null;
+				}
 				return {{toLower @key}}Group.GetSingleEntity(); } }
 
 		{{#if matcher.all}}
@@ -36,7 +40,10 @@ namespace {{@key}} {
 		{{#unless matcher.any}}
 		{{#if type}}
 		public {{type}} {{toLower @key}} { 
-			get { return {{toLower @key}}Entity.{{toLower @key}}; }	
+			get {
+				if ({{toLower @key}}Entity == null) throw new System.Exception("{{toUpper @../key}}Context has 0 or more than 1 entity with component '{{toUpper @key}}'. You can check safely with 'Has{{toUpper @key}}()'");
+				return {{toLower @key}}Entity.{{toLower @key}};
+			}	
 			set { 
 				if ({{toLower @key}}Group.count > 1) throw new System.Exception("{{toUpper @../key}}Context has more than 1 entity with component '{{toUpper @key}}'. You can check safely with 'Has{{toUpper @key}}()'");
 				else if ({{toLower @key}}Group.count == 0) this.CreateEntity().{{toLower @key}} = value;

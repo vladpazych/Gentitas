@@ -44,61 +44,75 @@ namespace {{@key}}.Indexes {
                 return entity.Has{{toUpper valueComponentName}}() {{#each flagComponentNames}}&& entity.Has{{this}}(){{/each}};
             }
 
-            void HandleEntity({{toUpper ../name}}Entity entity)
-            {
-                var value = entity.{{toLower valueComponentName}};
-
-                if (Filter(entity))
+            void Remove({{toUpper ../name}}Entity entity, {{type}} value) {
+                if (lookup.ContainsKey(value))
                 {
-                    if (!lookup.ContainsKey(value)) lookup.Add(value, new HashSet<{{toUpper ../name}}Entity>());
                     var list = lookup[value];
-                    if (!list.Contains(entity)) list.Add(entity);
-                }
-                else
-                {
-                    if (lookup.ContainsKey(value))
-                    {
-                        var list = lookup[value];
-                        if (list.Contains(entity)) list.Remove(entity);
-                    }
+                    if (list.Contains(entity)) list.Remove(entity);
                 }
             }
 
-            void HandleEntity({{toUpper ../name}}Entity entity, {{type}} previous{{toUpper name}})
+            void HandleEntity({{toUpper ../name}}Entity entity, {{type}} value)
             {
-                if (entity.{{toLower valueComponentName}} != previous{{toUpper name}} && lookup.ContainsKey(previous{{toUpper name}}))
-                {
-                    var list = lookup[previous{{toUpper name}}];
-                    if (list.Contains(entity)) list.Remove(entity);
+                if (entity.Has{{toUpper valueComponentName}}()) {
+                    if (Filter(entity))
+                    {
+                        if (!lookup.ContainsKey(value)) lookup.Add(value, new HashSet<{{toUpper ../name}}Entity>());
+                        var list = lookup[value];
+                        if (!list.Contains(entity)) list.Add(entity);
+                    }
+                    else
+                    {
+                        Remove(entity, value);
+                    }
+                } else {
+                    Remove(entity, value);
                 }
+            }
 
-                HandleEntity(entity);
+            void HandleEntity({{toUpper ../name}}Entity entity, {{type}} value, {{type}} previousValue)
+            {
+                if (value != previousValue)
+                {
+                    Remove(entity, previousValue);
+                }
+                
+                HandleEntity(entity, value);
             }
 
             void Added(IGroup<{{toUpper ../name}}Entity> group, {{toUpper ../name}}Entity entity, int index, IComponent component)
             {
-                HandleEntity(entity);
+                HandleEntity(entity, ((Components.{{toUpper ../name}}.{{toUpper valueComponentName}})component).value);
             }
 
             void Updated(IGroup<{{toUpper ../name}}Entity> group, {{toUpper ../name}}Entity entity, int index, IComponent previousComponent, IComponent component)
             {
-                HandleEntity(entity, ((Components.{{toUpper ../name}}.{{toUpper valueComponentName}})previousComponent).value);
+                HandleEntity(entity, ((Components.{{toUpper ../name}}.{{toUpper valueComponentName}})component).value, ((Components.{{toUpper ../name}}.{{toUpper valueComponentName}})previousComponent).value);
             }
 
             void Removed(IGroup<{{toUpper ../name}}Entity> group, {{toUpper ../name}}Entity entity, int index, IComponent component)
             {
-                HandleEntity(entity);
+                HandleEntity(entity, ((Components.{{toUpper ../name}}.{{toUpper valueComponentName}})component).value);
             }
 
             public {{toUpper ../name}}Entity FindSingle({{type}} value)
             {
                 if (!lookup.ContainsKey(value)) return null;
-                return lookup[value].SingleEntity<{{toUpper ../name}}Entity>();
+                if (lookup[value].Count == 0) return null;
+                if (lookup[value].Count > 1) {
+                    UnityEngine.Debug.LogError("{{realNamespace}}.{{toUpper name}}Index has more than 1 entity with value " + value);
+                    return null;
+                }
+                foreach (var item in  lookup[value])
+                {
+                    return item;
+                }
+                return null;
             }
 
             public HashSet<{{toUpper ../name}}Entity> Find({{type}} value)
             {
-                if (!lookup.ContainsKey(value)) return null;
+                if (!lookup.ContainsKey(value)) return new HashSet<{{toUpper ../name}}Entity>();
                 return lookup[value];
             }
 

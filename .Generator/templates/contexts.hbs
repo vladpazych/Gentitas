@@ -25,16 +25,12 @@ namespace {{@key}} {
         static Contexts __sharedInstance;
 
         public static void CreateContextObserver(IContext context) {
-            {{#each contexts}}
-            {{#unless settings.isDisableObserver}}
 #if(!ENTITAS_DISABLE_VISUAL_DEBUGGING && UNITY_EDITOR)
             if(UnityEngine.Application.isPlaying) {
                 var observer = new Entitas.VisualDebugging.Unity.ContextObserver(context);
                 UnityEngine.Object.DontDestroyOnLoad(observer.gameObject);
             }
 #endif
-            {{/unless}}
-            {{/each}}
         }
 
         // Contexts
@@ -68,8 +64,8 @@ namespace {{@key}} {
             {{/each}}
 
             {{#each contexts}}
-            {{#unless settings.isPartial}}
-            CreateContextObserver(_{{toLower @key}});
+            {{#unless settings.isDisableObserver}}
+            CreateContextObserver(_{{toLower name}});
             {{/unless}}
             {{/each}}
         }
@@ -94,7 +90,7 @@ namespace {{@key}} {
                 {{toUpper @key}}ComponentsLookup.TotalComponents,
                 0,
                 new ContextInfo(
-                    "{{moduleNameValue}}{{toUpper @key}}",
+                    "{{realNamespace}}.{{toUpper @key}}",
                     {{toUpper @key}}ComponentsLookup.componentNames,
                     {{toUpper @key}}ComponentsLookup.componentTypes
                 ),

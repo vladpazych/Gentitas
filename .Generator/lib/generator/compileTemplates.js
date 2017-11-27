@@ -2,7 +2,7 @@ var fs = require('fs')
 var path = require('path')
 var Handlebars = require('handlebars')
 var errors = require('prettified').errors
-var config = require('./templates.json')
+var config = require('../../templates.json')
 var parse = require('./parse')
 
 var helpers = {}
