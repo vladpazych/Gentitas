@@ -59,7 +59,8 @@ namespace {{@key}} {
 					if (value) this.CreateEntity().{{toLower @key}} = value;
 				}
 				else {
-					{{toLower @key}}Entity.{{toLower @key}} = value;
+					if (value) { {{toLower @key}}Entity.{{toLower @key}} = true; }
+					else { {{toLower @key}}Entity.Destroy(); }
 				}
 			}
 		}
