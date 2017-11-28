@@ -5,7 +5,7 @@ Gentitas is a fast code generator for Entitas. It watches your `Assets` folder f
 ---
 
 ### **[» Download](#download-gentitas)**
-### **[» Install and run](wiki-install)**
+### **[» How to use](#how-to-use)**
 ### **[» Ask a question / Report a bug](issues-new)**
 ### **[» Wiki and examples](wiki)**
 ### **[» Go to Entitas repository](https://github.com/sschmid/Entitas-CSharp)**
