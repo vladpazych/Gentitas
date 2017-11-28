@@ -1,0 +1,13 @@
+{
+    "files": {
+        "./Contexts.cs": "./templates/contexts.hbs",
+        "./Components.cs": "./templates/components.hbs",
+        "./Entities.cs": "./templates/entities.hbs",
+        "./Groups.cs": "./templates/groups.hbs",
+        "./Indexes.cs": "./templates/indexes.hbs",
+        "./Matchers.cs": "./templates/matchers.hbs",
+        "./DevTools.cs": "./templates/devTools.hbs",
+        "./Systems.cs": "./templates/systems.hbs"
+    },
+    "partials": {}
+}

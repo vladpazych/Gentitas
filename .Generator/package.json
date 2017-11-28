@@ -1,0 +1,35 @@
+{
+  "name": "gentitas",
+  "version": "0.1.1",
+  "description": "Gentitas is a fast code generator for Entitas projects in Unity3D",
+  "main": "server.js",
+  "scripts": {
+    "start": "node ./server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vladpazych/Gentitas.git"
+  },
+  "keywords": [
+    "gentitas"
+  ],
+  "author": "Vladislav Pazych <vladpazych@gmail.com> (https://github.com/vladpazych)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vladpazych/Gentitas/issues"
+  },
+  "homepage": "https://github.com/vladpazych/Gentitas#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "fs-extra": "^4.0.2",
+    "fs-walk": "0.0.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-zip": "^4.0.0",
+    "gulp4": "^4.0.2",
+    "handlebars": "^4.0.11",
+    "nexe": "^2.0.0-rc.20",
+    "node-watch": "^0.5.5",
+    "prettified": "0.0.7",
+    "properties-reader": "0.0.16"
+  }
+}
