@@ -5,9 +5,9 @@ Gentitas is a fast code generator for Entitas. It watches your `Assets` folder f
 ---
 
 ### **[» Download](#download-gentitas)**
-### **[» Install and run](https://github.com/vladpazych/Gentitas/wiki/Install-and-run)**
-### **[» Ask a question / Report a bug](https://github.com/vladpazych/Gentitas/issues/new)**
-### **[» Wiki and examples](https://github.com/vladpazych/Gentitas/wiki)**
+### **[» Install and run](wiki-install)**
+### **[» Ask a question / Report a bug](issues-new)**
+### **[» Wiki and examples](wiki)**
 ### **[» Go to Entitas repository](https://github.com/sschmid/Entitas-CSharp)**
 
 ---
@@ -25,11 +25,11 @@ namespace Game.YourModule.Declaration
             var Application = Component().GroupSingle;
             var RabbitName = Component<string>().Index;
             var Rabbit = Component();
-            var RabbitUnit = Component<RabbitUnit>().GroupSingle;
+            var RabbitUnit = Component<float>().GroupSingle;
             var Fast = Component();
             var Speed = Component<float>().Group;
 
-            var RabbitWithName = Group(Match.All(Sceme, RabbitName));
+            var RabbitWithName = Group(Matcher.All(Rabbit, RabbitName));
             var FastRabbitName = Index(RabbitName, Rabbit, Fast);
         }
     }
@@ -42,7 +42,7 @@ void Example ()
     var entity = Contexts.state.CreateComponent();
     entity.rabbitName = "Steve";
     entity.rabbit = true;
-    entity.fast = truel
+    entity.fast = true;
     entity.speed = 10f;
 
     // Groups
@@ -52,55 +52,45 @@ void Example ()
     var rabbitUnit Contexts.state.rabbitUnit;
 
     // Index
-    Contexts.state.fastRabbitNameIndex.GetCount("Steve");
-    Contexts.state.fastRabbitNameIndex.Find("Steve");
-    Contexts.state.fastRabbitNameIndex.FindSingle("Steve");
+    var numberOfRabbitsWithNameSteve = Contexts.state.fastRabbitNameIndex.GetCount("Steve");
+    var rabbitsWithNameSteve = Contexts.state.fastRabbitNameIndex.Find("Steve");
+    var rabbitWithNameSteve = Contexts.state.fastRabbitNameIndex.FindSingle("Steve");
 }
 ```
 
 How to use
 ==========
-- [Download](https://github.com/vladpazych/Gentitas/releases) `.zip` framework and generator, unpack it in your `Assets` folder, put `Generator` folder into `Framework` folder, and run `Generator.exe`.
-
-or
-- Download sources (this repository) and put it in root of your project (same level as `Assets` folder), and [follow instructions](#how-to-run-and-build-from-source).
-
-Current limitations
-===================
-- Prebuilt releases tested only on Windows 10. If you want to use it on macOS or Linux, please use source version, or build from source yourself.
-- Framework can't automaticly download updates.
-- Framewrok can't automaticly download generator.
-
-How to run and build from source
-======================
-`Gentitas.exe` size is too big to be included in your git repo, so it might be good idea to keep sources in your project, so you can rebuild any time.
-
-If you have built version and source version, keep in mind that they use different instances of config and templates. When you build whole framework, source version of templates and config will be written in your Assets folder for built generator to use.
-
-### To work with sources
-You need to have  [Node.js](https://nodejs.org/) installed.
-```
-cd [pathToYourProject]/Gentitas
-npm install
-```
-
-### To run generator from source
-```
-npm start
-```
-
-### To build only generator (if you already have framework):
-```
-npm run build
-```
-### To build whole gentitas framework with configs:
-```
-npm run build-gentitas-into-project
-```
-
+- [Download](https://github.com/vladpazych/Gentitas/releases) latest version
+- Move downloaded `Gentitas` folder into your `Assets` folder
+- Run `Tools/Entitas/Check System For Gentitas`
+- If you don't have [Node.js](https://nodejs.org/) installed - it will tell you
+- Run `Tools/Entitas/Install Gentitas Dependecies`
+- Run `Tools/Entitas/Start Gentitas Generator`
+- Create `[AnyFileName].gentitas.cs` somewhere in your `Assets` folder
+- Add declaration code from [First glimpse](#first-glimpse) and save file
+- Check your `Assets/Generated` folder
+- That's it
 
 Download Gentitas
 =================
 Each release contains framework code and generator executable.
 
 [Show releases](https://github.com/vladpazych/Gentitas/releases)
+
+Contribute
+==========
+The project is hosted on [GitHub][repo] where you can [report issues][issues-new], fork the project and [submit pull requests][pulls].
+
+Feel free to [suggest your ideas][issues-new].
+
+
+Maintainer
+==========
+* [@vladpazych](https://github.com/vladpazych)
+
+[issues-new]: https://github.com/vladpazych/Gentitas/issues/new "New issue"
+[wiki]: https://github.com/vladpazych/Gentitas/wiki "Entitas Wiki"
+[wiki-install]: https://github.com/vladpazych/Gentitas/wiki/Install-and-run "Install and run"
+[releases]: https://github.com/vladpazych/Gentitas/releases "Releases"
+[repo]: https://github.com/vladpazych/Gentitas "Repository"
+[pulls]: https://github.com/vladpazych/Gentitas/pulls "New pull request"
