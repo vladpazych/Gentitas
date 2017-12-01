@@ -7,7 +7,7 @@ Gentitas is a fast code generator for Entitas. It watches your `Assets` folder f
 ### **[» Download](#download-gentitas)**
 ### **[» How to use](#how-to-use)**
 ### **[» Ask a question / Report a bug](issues-new)**
-### **[» Wiki and examples](wiki)**
+### **[» Wiki and examples](https://github.com/vladpazych/Gentitas/wiki)**
 ### **[» Go to Entitas repository](https://github.com/sschmid/Entitas-CSharp)**
 
 ---
@@ -89,7 +89,6 @@ Maintainer
 * [@vladpazych](https://github.com/vladpazych)
 
 [issues-new]: https://github.com/vladpazych/Gentitas/issues/new "New issue"
-[wiki]: https://github.com/vladpazych/Gentitas/wiki "Entitas Wiki"
 [wiki-install]: https://github.com/vladpazych/Gentitas/wiki/Install-and-run "Install and run"
 [releases]: https://github.com/vladpazych/Gentitas/releases "Releases"
 [repo]: https://github.com/vladpazych/Gentitas "Repository"
