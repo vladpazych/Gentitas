@@ -79,9 +79,9 @@ Each release contains framework code, generator code and `.sh` / `.cmd` scripts 
 
 Contribute
 ==========
-The project is hosted on [GitHub][https://github.com/vladpazych/Gentitas] where you can [report issues][https://github.com/vladpazych/Gentitas/issues/new], fork the project and [submit pull requests][https://github.com/vladpazych/Gentitas/pulls].
+The project is hosted on [GitHub](https://github.com/vladpazych/Gentitas) where you can [report issues](https://github.com/vladpazych/Gentitas/issues/new), fork the project and [submit pull requests](https://github.com/vladpazych/Gentitas/pulls).
 
-Feel free to [suggest your ideas][https://github.com/vladpazych/Gentitas/issues/new].
+Feel free to [suggest your ideas](https://github.com/vladpazych/Gentitas/issues/new).
 
 
 Maintainer
