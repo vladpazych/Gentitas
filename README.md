@@ -49,7 +49,7 @@ void Example ()
     var application = Contexts.state.applicationEntity;
     var speedGroup = Contexts.state.speedGroup;
     var speedEntities = Contexts.state.speedEntities;
-    var rabbitUnit Contexts.state.rabbitUnit;
+    var rabbitUnit = Contexts.state.rabbitUnit;
 
     // Index
     var numberOfRabbitsWithNameSteve = Contexts.state.fastRabbitNameIndex.GetCount("Steve");
