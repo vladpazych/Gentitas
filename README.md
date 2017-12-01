@@ -73,7 +73,7 @@ How to use
 
 Download Gentitas
 =================
-Each release contains framework code and generator executable.
+Each release contains framework code, generator code and `.sh` / `.cmd` scripts to run generator and install it's dependencies.
 
 [Show releases](https://github.com/vladpazych/Gentitas/releases)
 
