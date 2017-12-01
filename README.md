@@ -6,7 +6,7 @@ Gentitas is a fast code generator for Entitas. It watches your `Assets` folder f
 
 ### **[» Download](#download-gentitas)**
 ### **[» How to use](#how-to-use)**
-### **[» Ask a question / Report a bug](issues-new)**
+### **[» Ask a question / Report a bug](https://github.com/vladpazych/Gentitas/issues/new)**
 ### **[» Wiki and examples](https://github.com/vladpazych/Gentitas/wiki)**
 ### **[» Go to Entitas repository](https://github.com/sschmid/Entitas-CSharp)**
 
@@ -79,17 +79,11 @@ Each release contains framework code, generator code and `.sh` / `.cmd` scripts 
 
 Contribute
 ==========
-The project is hosted on [GitHub][repo] where you can [report issues][issues-new], fork the project and [submit pull requests][pulls].
+The project is hosted on [GitHub][https://github.com/vladpazych/Gentitas] where you can [report issues][https://github.com/vladpazych/Gentitas/issues/new], fork the project and [submit pull requests][https://github.com/vladpazych/Gentitas/pulls].
 
-Feel free to [suggest your ideas][issues-new].
+Feel free to [suggest your ideas][https://github.com/vladpazych/Gentitas/issues/new].
 
 
 Maintainer
 ==========
 * [@vladpazych](https://github.com/vladpazych)
-
-[issues-new]: https://github.com/vladpazych/Gentitas/issues/new "New issue"
-[wiki-install]: https://github.com/vladpazych/Gentitas/wiki/Install-and-run "Install and run"
-[releases]: https://github.com/vladpazych/Gentitas/releases "Releases"
-[repo]: https://github.com/vladpazych/Gentitas "Repository"
-[pulls]: https://github.com/vladpazych/Gentitas/pulls "New pull request"
