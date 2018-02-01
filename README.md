@@ -39,17 +39,19 @@ namespace Game.YourModule.Declaration
 void Example ()
 {
     // Components
-    var entity = Contexts.state.CreateComponent();
+    var entity = Contexts.state.CreateEntity();
     entity.rabbitName = "Steve";
     entity.rabbit = true;
     entity.fast = true;
     entity.speed = 10f;
 
     // Groups
-    var application = Contexts.state.applicationEntity;
+    var applicationEntity = Contexts.state.applicationEntity;
+    var applicationExists = Contexts.state.HasApplication();
     var speedGroup = Contexts.state.speedGroup;
     var speedEntities = Contexts.state.speedEntities;
     var rabbitUnit = Contexts.state.rabbitUnit;
+    var rabbitWithNameGroup = Contexts.state.rabbitWithNameGroup;
 
     // Index
     var numberOfRabbitsWithNameSteve = Contexts.state.fastRabbitNameIndex.GetCount("Steve");
