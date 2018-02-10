@@ -2,6 +2,8 @@
 
 Gentitas is a fast code generator for Entitas. It watches your `Assets` folder for `.gentitas.cs` files and generates Entitas API from them.
 
+**Important!** Latest supported version of Entitas is [0.45.1](https://github.com/sschmid/Entitas-CSharp/releases/tag/0.45.1). Newer versions of Entitas will cause compile errors.
+
 ---
 
 ### **[» Download](#download-gentitas)**
@@ -63,7 +65,7 @@ void Example ()
 How to use
 ==========
 - [Download](https://github.com/vladpazych/Gentitas/releases) latest version
-- Move downloaded `Gentitas` folder into your `Assets` folder
+- Move downloaded `Gentitas` folder into your `Assets/Plugins`* folder
 - Run `Tools/Entitas/Check System For Gentitas`
 - If you don't have [Node.js](https://nodejs.org/) installed - it will tell you
 - Run `Tools/Entitas/Install Gentitas Dependecies`
@@ -71,7 +73,9 @@ How to use
 - Create `[AnyFileName].gentitas.cs` somewhere in your `Assets` folder
 - Add declaration code from [First glimpse](#first-glimpse) and save file
 - Check your `Assets/Generated` folder
-- That's it
+- Enjoy generated Entitas API
+
+*It's important to use `Plugins` folder, otherewise Menu Items will not work.
 
 Download Gentitas
 =================
