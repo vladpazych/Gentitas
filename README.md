@@ -4,9 +4,8 @@ Gentitas is a fast code generator for Entitas and a framework on top of Entitas.
 
 ---
 
-**Important!** Latest supported version of Entitas is [0.45.1](https://github.com/sschmid/Entitas-CSharp/releases/tag/0.45.1). Newer versions of Entitas will cause compile errors.
-
-**Important!** Until new wiki is ready, keep in mind that currently Gentitas does not support Context declarations without namespaces. All Context declarations must be written in `Declaration` namespace of some namespace e.g. `Account.Declaration`, `Game.World.Declaration`. Also only one `.gentitas.cs` file is allowed per namespace module. (It will be fixed in next release)
+**Important!** 
+This project is dead and no longer maintained, I recommend using official [Entitas Code Generator](https://github.com/sschmid/Entitas-CSharp).
 
 ---
 
